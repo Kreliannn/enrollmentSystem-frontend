@@ -157,6 +157,7 @@ export default function Page(){
                                 <button
                                     onClick={() => removeGradeLevel(gradeIndex)}
                                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm transition-colors"
+                                    hidden={gradeIndex != course.year.length - 1 }
                                 >
                                     Remove
                                 </button>
@@ -235,6 +236,7 @@ export default function Page(){
                                                 <button
                                                     onClick={() => removeSubject(gradeIndex, subjectIndex)}
                                                     className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs transition-colors"
+                                                  
                                                 >
                                                     Remove Subject
                                                 </button>
