@@ -26,6 +26,8 @@ export default function Page(){
                 code : "",
                 year: []
             })
+            setCourseName("")
+            setCourseCode("")
         },
         onError : () => errorAlert("error occur")
     })
@@ -107,6 +109,7 @@ export default function Page(){
     }
 
     const handleSubmit = () => {
+        
         const finalCourse = {
             ...course,
             course: courseName,
@@ -114,7 +117,6 @@ export default function Page(){
         }
 
         
-
         if(!courseName.trim() || !courseCode.trim()) return errorAlert("course name or code is empty")
         if(course.year.length == 0) return errorAlert("grade level is empty")
 
@@ -130,6 +132,7 @@ export default function Page(){
                 if(!sub.code.trim()) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects code is empty`}
                 if(!sub.units) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is empty`}
                 if(sub.units <= 0) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is negative or 0`}
+                if(!Number.isInteger(sub.units)) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit has decimal`}
                 if(!sub.type) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects type is empty`}
             })
         })
