@@ -2,9 +2,10 @@
 import { useState } from "react"
 import { courseInterface } from "@/app/types/courses.type"
 import { convertGradeLevel } from "@/app/utils/customFunction"
-import { errorAlert } from "@/app/utils/alert"
-
-
+import { errorAlert, successAlert } from "@/app/utils/alert"
+import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
+import { backendUrl } from "@/app/utils/url"
 
 export default function Page(){
     const [course, setCourse] = useState<courseInterface>({
@@ -15,6 +16,19 @@ export default function Page(){
 
     const [courseName, setCourseName] = useState("")
     const [courseCode, setCourseCode] = useState("")
+
+    const mutation = useMutation({
+        mutationFn : (data : courseInterface) => axios.post(backendUrl("/course"), data),
+        onSuccess : () => {
+            successAlert("course added")
+            setCourse({
+                course: "",
+                code : "",
+                year: []
+            })
+        },
+        onError : () => errorAlert("error occur")
+    })
 
     const addGradeLevel = () => {
         const newGradeLevel = {
@@ -122,7 +136,7 @@ export default function Page(){
 
         if(validation.isError) return errorAlert(validation.message)
 
-        alert("suces")
+        mutation.mutate(finalCourse)
 
     }
 
