@@ -2,6 +2,9 @@
 import { useState } from "react"
 import { courseInterface } from "@/app/types/courses.type"
 import { convertGradeLevel } from "@/app/utils/customFunction"
+import { errorAlert } from "@/app/utils/alert"
+
+
 
 export default function Page(){
     const [course, setCourse] = useState<courseInterface>({
@@ -37,7 +40,7 @@ export default function Page(){
         const newSubject = {
             name: "",
             code: "",
-            units: "",
+            units: 0,
             type: ""
         }
         setCourse(prev => ({
@@ -95,7 +98,32 @@ export default function Page(){
             course: courseName,
             code : courseCode
         }
-        console.log(finalCourse)
+
+        
+
+        if(!courseName.trim() || !courseCode.trim()) return errorAlert("course name or code is empty")
+        if(course.year.length == 0) return errorAlert("grade level is empty")
+
+        let validation = {
+            isError : false,
+            message : ""
+        }
+
+        finalCourse.year.forEach((item, index) => {
+            if(item.subjects.length == 0) validation = {isError : true, message : `no subject found in ${convertGradeLevel(index + 1)}`}
+            item.subjects.forEach((sub) => {
+                if(!sub.name.trim()) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects name is empty`}
+                if(!sub.code.trim()) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects code is empty`}
+                if(!sub.units) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is empty`}
+                if(sub.units <= 0) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is negative or 0`}
+                if(!sub.type) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects type is empty`}
+            })
+        })
+
+        if(validation.isError) return errorAlert(validation.message)
+
+        alert("suces")
+
     }
 
     return(

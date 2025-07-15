@@ -6,7 +6,7 @@ export interface courseInterface {
         subjects : {
             name : string,
             code : string,
-            units : string,
+            units : number,
             type : string,
         }[]
     }[],
