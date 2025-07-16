@@ -45,7 +45,7 @@ export default function Page(){
 
 
     const mutation = useMutation({
-        mutationFn : (data : sectionInterface) => axios.post("section", data),
+        mutationFn : (data : sectionInterface) => axios.post(backendUrl("/section"), data),
         onSuccess : () => {
             setCourse("")
             setSection("")
@@ -133,7 +133,7 @@ export default function Page(){
             level : courseData.level,
             sem : courseData.sem,
             subjects : subjectFormatedTime,
-            student : []
+            students : []
         }
 
         mutation.mutate(sectionObj)
@@ -141,7 +141,15 @@ export default function Page(){
 
     return(
         <div className="w-full h-full">
-            <div className="w-5/6 bg-stone-50 shadow-lg m-auto mt-5  p-5 "> 
+
+            <div className="w-full h-32 bg-white shadow-sm border-b flex items-center justify-center">
+                <div className="text-center">
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">Add Section</h1>
+                <p className="text-gray-600">lre asdas da sd asd</p>
+                </div>
+            </div>
+
+            <div className="w-5/6 bg-stone-50 shadow-lg m-auto   p-5 mt-10 mb-10 rounded"> 
 
                 <div className="flex gap-5">
 
@@ -251,7 +259,7 @@ export default function Page(){
                 </div>
                 
                 <div className="mt-5 flex justify-end">
-                    <Button className="" onClick={submitHandler}>  Create Section </Button>
+                    <Button className="" onClick={submitHandler} hidden={subjectData.length == 0}>  Create Section </Button>
                 </div>
 
             </div>

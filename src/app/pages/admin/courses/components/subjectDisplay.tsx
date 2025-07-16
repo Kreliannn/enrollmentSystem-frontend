@@ -28,7 +28,7 @@ export function SubjectDisplay({ year, course , code} : { year : yearLevelInterf
                 size="sm"
                 className="text-xs px-3 py-1 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 transition-colors duration-200"
             >
-                {year.level}
+                {year.level} - {year.sem}
             </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

@@ -21,7 +21,7 @@ export interface sectionInterface{
     level : string,
     sem : string,
     subjects : sectionSubjectsInterface[],
-    student : enrolledInterface[]
+    students : enrolledInterface[]
 }
 
 export interface getSectionInterface extends sectionInterface {

@@ -147,8 +147,16 @@ export default function Page(){
     }
 
     return(
-        <div className="w-full h-full p-6 bg-gray-50 min-h-screen overflow-auto">
-            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <div className="w-full h-full  bg-gray-50 min-h-screen overflow-auto">
+
+            <div className="w-full h-32 bg-white shadow-sm border-b flex items-center justify-center">
+                <div className="text-center">
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">Add Course</h1>
+                <p className="text-gray-600">lre asdas da sd asd</p>
+                </div>
+            </div>
+
+            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 mt-10 mb-10">
                 <h1 className="text-2xl font-bold text-gray-800 mb-6">Add New Course</h1>
                 
                 {/* Course Name Input */}
