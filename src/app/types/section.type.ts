@@ -1,4 +1,4 @@
-export interface sectionSubjects  {
+export interface sectionSubjectsInterface  {
     name : string,
     code : string,
     units : number,
@@ -7,7 +7,7 @@ export interface sectionSubjects  {
     start : string,
     end : string,
     section : string,
-    room : string
+    room : string,
     instructor : string,
 }
 
@@ -18,8 +18,9 @@ export interface enrolledInterface {
 
 export interface sectionInterface{
     course : string,
-    code : string,
-    subjects : sectionSubjects[],
+    level : string,
+    sem : string,
+    subjects : sectionSubjectsInterface[],
     student : enrolledInterface[]
 }
 

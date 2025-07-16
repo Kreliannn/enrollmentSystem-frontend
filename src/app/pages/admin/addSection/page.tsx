@@ -8,6 +8,13 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@radix-ui/react-label"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Plus } from "lucide-react"
+import { sectionSubjectsInterface, sectionInterface } from "@/app/types/section.type"
+import { formatToAmPm } from "@/app/utils/customFunction"
+import { errorAlert, successAlert } from "@/app/utils/alert"
+import { useMutation } from "@tanstack/react-query"
+
 
 export default function Page(){
 
@@ -20,6 +27,12 @@ export default function Page(){
     
     useEffect(() => { data?.data && setCourses(data.data) }, [data])
 
+    const [courseData, setCourseData] = useState({
+        course : "",
+        sem : "",
+        level : ""
+    })
+
     const [section, setSection] = useState("")
     const [course, setCourse] = useState("")
     const [gradeLevelSelect, setGradeLevelSelect] = useState("")
@@ -27,11 +40,31 @@ export default function Page(){
     const [gradeLevel, setGradeLevel] = useState<yearLevelInterface[]>([])
 
     const [subjects, setSubjects] = useState<subjectsInterface[]>([])
+
+    const [subjectData, setSubjectData] = useState<sectionSubjectsInterface[]>([])
+
+
+    const mutation = useMutation({
+        mutationFn : (data : sectionInterface) => axios.post("section", data),
+        onSuccess : () => {
+            setCourse("")
+            setSection("")
+            setGradeLevelSelect("")
+            setGradeLevel([])
+            setSubjects([])
+            setSubjectData([])
+            successAlert("Section Added")
+        },
+        onError : () => {
+            errorAlert("error occur")
+        }
+    })
  
 
     const selectCourse = (value : string) => {
         setCourse(value)
         setGradeLevelSelect("")
+        setSubjectData([])
         setSubjects([])
         courses.map((item) => {
             if(item.code == value){
@@ -41,16 +74,70 @@ export default function Page(){
     }
 
     const selectGradeLevel = (value : string) => {
+        setSubjectData([])
         setGradeLevelSelect(value)
+     
         gradeLevel.map((item) => {
             if(`${item.level} - ${item.sem}` == value ){
                 setSubjects(item.subjects)
+                setCourseData({
+                    course : course,
+                    level : item.level,
+                    sem : item.sem
+                })
+                item.subjects.forEach((sub) => {
+                    const subjectObj : sectionSubjectsInterface = {
+                        name : sub.name,
+                        code : sub.code,
+                        units : sub.units,
+                        type : sub.type,
+                        days : "",
+                        start : "",
+                        end : "",
+                        section : section,
+                        room : "",
+                        instructor : "",
+                    }
+                    setSubjectData((prev) => [...prev, subjectObj])
+                })
             }
         })
     }
 
+
+    const updateSubjectData = (field : string, value : string, index : number) => {
+        const data = [...subjectData]
+        data[index] = {
+            ...data[index] ,
+            [field] : value
+        }
+        setSubjectData(data)
+    }
+
     
-   
+   const submitHandler = () => {
+        if(!section || !gradeLevelSelect || !course) return errorAlert("empty field")
+        for(let index = 0; index < subjectData.length; index++) {
+            const sub = subjectData[index];
+            if (!sub.days.trim()) return errorAlert(`subject days is empty on ${sub.code}`);
+            if (!sub.start.trim()) return errorAlert(`subject start is empty on  ${sub.code}`);
+            if (!sub.end.trim()) return errorAlert(`subject end is empty on  ${sub.code}`);
+            if (!sub.room.trim()) return errorAlert(`subject room is empty on  ${sub.code}`);
+            if (!sub.instructor.trim()) return errorAlert(`subject instructor is empty on  ${sub.code}`);
+        }
+
+        const subjectFormatedTime = subjectData.map((sub) => ({...sub, start : formatToAmPm(sub.start),  end : formatToAmPm(sub.end)}))
+
+        const sectionObj : sectionInterface = {
+            course : courseData.course,
+            level : courseData.level,
+            sem : courseData.sem,
+            subjects : subjectFormatedTime,
+            student : []
+        }
+
+        mutation.mutate(sectionObj)
+   }
 
     return(
         <div className="w-full h-full">
@@ -113,23 +200,25 @@ export default function Page(){
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {subjects.map((sub, index) => {
+                                {subjectData.map((sub, index) => {
 
                                     return(
                                         <TableRow key={index}>
                                             <TableCell className="font-bold">{sub.code}</TableCell>
-                                            <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{"web system tecgnology 1 sdaaaaaaaaaaaaaaa sa sadasd  sadasdasd"}</TableCell>
+                                            <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
                                             <TableCell>{sub.units}</TableCell>
                                             <TableCell>{sub.type}</TableCell>
                                             {/*DAYS*/}
                                             <TableCell>
-                                                <Input className="w-15 shadow" />
+                                                <Input className="w-15 shadow"  value={sub.days} onChange={(e) => updateSubjectData("days", e.target.value, index)}/>
                                             </TableCell>
                                             {/*START*/}
                                             <TableCell>
                                                 <Input
                                                     type="time"
-                                                    id="time-picker"  
+                                                    id="time-picker"
+                                                    value={sub.start}
+                                                    onChange={(e) => updateSubjectData("start", e.target.value, index)}  
                                                     className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                                                 />
                                             </TableCell>
@@ -138,6 +227,8 @@ export default function Page(){
                                                 <Input
                                                     type="time"
                                                     id="time-picker"
+                                                    value={sub.end}
+                                                    onChange={(e) => updateSubjectData("end", e.target.value, index)} 
                                                     className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                                                 />
                                             </TableCell>
@@ -145,12 +236,12 @@ export default function Page(){
                                             <TableCell>{section ? <span> {section} </span> : <span className="text-red-500"> empty </span>}</TableCell>
                                             {/*ROOM */}
                                             <TableCell>
-                                                <Input className="w-15 shadow" />
+                                                <Input className="w-15 shadow"   value={sub.room} onChange={(e) => updateSubjectData("room", e.target.value, index)}  />
                                             </TableCell>
 
-                                            {/*END*/}
+                                            {/*INSTRUVTOR*/}
                                               <TableCell className="w-62 ">
-                                                <Input className="w-full shadow" />
+                                                <Input className="w-full shadow"   value={sub.instructor} onChange={(e) => updateSubjectData("instructor", e.target.value, index)} />
                                             </TableCell>
                                         </TableRow>
                                     )
@@ -159,6 +250,9 @@ export default function Page(){
                         </Table>
                 </div>
                 
+                <div className="mt-5 flex justify-end">
+                    <Button className="" onClick={submitHandler}>  Create Section </Button>
+                </div>
 
             </div>
         </div>

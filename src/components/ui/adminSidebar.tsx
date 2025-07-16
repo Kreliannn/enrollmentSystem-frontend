@@ -1,8 +1,14 @@
 "use client"
 import Link from "next/link"
-import { Calendar, Home, Building, Search, UserPlus2, User, FileText, BarChart3, Building2, LogOut } from "lucide-react"
-import { useState, useEffect } from "react"
-
+import {
+  Home,
+  BookOpen,
+  PlusCircle,
+  Layers3,
+  UserPlus2,
+  LogOut,
+  Building2,
+} from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +23,6 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-// Navigation items
 const navigationItems = [
   {
     title: "Dashboard",
@@ -25,24 +30,24 @@ const navigationItems = [
     icon: Home,
   },
   {
-    title: "courses",
+    title: "Courses",
     url: "/pages/admin/courses",
-    icon: Building,
+    icon: BookOpen,
   },
   {
     title: "Add Courses",
     url: "/pages/admin/addCourses",
-    icon: Building,
+    icon: PlusCircle,
   },
   {
-    title: "section",
+    title: "Section",
     url: "/pages/admin/section",
-    icon: Building,
+    icon: Layers3,
   },
   {
     title: "Add Section",
     url: "/pages/admin/addSection",
-    icon: Building,
+    icon: UserPlus2,
   },
 ]
 
@@ -51,7 +56,7 @@ const accountItems = [
     title: "Logout",
     url: "/",
     icon: LogOut,
-  }
+  },
 ]
 
 interface AppSidebarProps {
@@ -59,7 +64,6 @@ interface AppSidebarProps {
 }
 
 export function AdminSideBar({ className }: AppSidebarProps) {
-    
   return (
     <Sidebar className={className}>
       <SidebarHeader>
@@ -85,21 +89,16 @@ export function AdminSideBar({ className }: AppSidebarProps) {
           <SidebarGroupLabel>Section</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navigationItems.map((item) => {
-
-              
-
-                return(
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <Link href={item.url}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-              })}
+              {navigationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.url}>
+                      <item.icon className="size-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -111,7 +110,7 @@ export function AdminSideBar({ className }: AppSidebarProps) {
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
                 <Link href={item.url}>
-                  <item.icon />
+                  <item.icon className="size-4" />
                   <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>
