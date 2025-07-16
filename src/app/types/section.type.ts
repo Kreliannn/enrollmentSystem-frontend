@@ -1,3 +1,8 @@
+export interface enrolledInterface {
+    studentId : string,
+    studentName : string
+}
+
 export interface sectionSubjectsInterface  {
     name : string,
     code : string,
@@ -8,18 +13,19 @@ export interface sectionSubjectsInterface  {
     end : string,
     section : string,
     room : string,
-    instructor : string,
+    instructor : {
+        instructor_id : string,
+        name : string
+    },
+    students : enrolledInterface[]
 }
 
-export interface enrolledInterface {
-    studentId : string,
-    studentName : string
-}
 
 export interface sectionInterface{
     course : string,
     level : string,
     sem : string,
+    section : string,
     subjects : sectionSubjectsInterface[],
     students : enrolledInterface[]
 }

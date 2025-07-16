@@ -47,6 +47,11 @@ const navigationItems = [
   {
     title: "Add Section",
     url: "/pages/admin/addSection",
+    icon: PlusCircle,
+  },
+  {
+    title: "Add Prof",
+    url: "/pages/admin/addProf",
     icon: UserPlus2,
   },
 ]

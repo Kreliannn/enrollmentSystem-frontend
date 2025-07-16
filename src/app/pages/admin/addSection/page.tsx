@@ -14,18 +14,29 @@ import { sectionSubjectsInterface, sectionInterface } from "@/app/types/section.
 import { formatToAmPm } from "@/app/utils/customFunction"
 import { errorAlert, successAlert } from "@/app/utils/alert"
 import { useMutation } from "@tanstack/react-query"
+import { getProfInterface } from "@/app/types/prof.type"
 
 
 export default function Page(){
 
     const [courses, setCourses] = useState<getCoursesInterface[]>([])
+    const [prof, setProf] = useState<getProfInterface[]>([])
 
     const { data } = useQuery({
         queryKey : ["courses"],
         queryFn : () => axios.get(backendUrl("/course"))
     })
     
+    const { data : secondData } = useQuery({
+        queryKey : ["prof"],
+        queryFn : () => axios.get(backendUrl("/prof"))
+    })
+    
     useEffect(() => { data?.data && setCourses(data.data) }, [data])
+
+    useEffect(() => { secondData?.data && setProf(secondData.data) }, [secondData])
+
+    console.log(prof)
 
     const [courseData, setCourseData] = useState({
         course : "",
@@ -96,7 +107,11 @@ export default function Page(){
                         end : "",
                         section : section,
                         room : "",
-                        instructor : "",
+                        instructor : {
+                            instructor_id : "",
+                            name : "",
+                        },
+                        students : []
                     }
                     setSubjectData((prev) => [...prev, subjectObj])
                 })
@@ -114,6 +129,22 @@ export default function Page(){
         setSubjectData(data)
     }
 
+    const selectProf = (id : string, index : number) => {
+        const data = [...subjectData]
+        prof.forEach((item) => {
+            if(item._id == id){
+                data[index] = {
+                    ...data[index] ,
+                    instructor : {
+                        instructor_id : id,
+                        name : item.name
+                    }
+                }
+            }
+        })
+        setSubjectData(data)
+    }
+
     
    const submitHandler = () => {
         if(!section || !gradeLevelSelect || !course) return errorAlert("empty field")
@@ -123,19 +154,20 @@ export default function Page(){
             if (!sub.start.trim()) return errorAlert(`subject start is empty on  ${sub.code}`);
             if (!sub.end.trim()) return errorAlert(`subject end is empty on  ${sub.code}`);
             if (!sub.room.trim()) return errorAlert(`subject room is empty on  ${sub.code}`);
-            if (!sub.instructor.trim()) return errorAlert(`subject instructor is empty on  ${sub.code}`);
+            if (!sub.instructor.name.trim()) return errorAlert(`subject instructor is empty on  ${sub.code}`);
         }
 
         const subjectFormatedTime = subjectData.map((sub) => ({...sub, start : formatToAmPm(sub.start),  end : formatToAmPm(sub.end)}))
 
         const sectionObj : sectionInterface = {
+            section : section,
             course : courseData.course,
             level : courseData.level,
             sem : courseData.sem,
             subjects : subjectFormatedTime,
             students : []
         }
-
+        console.log(sectionObj)
         mutation.mutate(sectionObj)
    }
 
@@ -248,8 +280,17 @@ export default function Page(){
                                             </TableCell>
 
                                             {/*INSTRUVTOR*/}
-                                              <TableCell className="w-62 ">
-                                                <Input className="w-full shadow"   value={sub.instructor} onChange={(e) => updateSubjectData("instructor", e.target.value, index)} />
+                                            <TableCell className="w-62 ">
+                                                <Select onValueChange={(value) => selectProf(value, index)} value={sub.instructor.instructor_id}>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Select Instructor" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {prof.map((prof, index) => (
+                                                            <SelectItem key={index} value={prof._id}>{prof.name}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
                                             </TableCell>
                                         </TableRow>
                                     )
