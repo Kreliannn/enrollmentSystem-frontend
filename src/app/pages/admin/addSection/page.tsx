@@ -43,7 +43,7 @@ export default function Page(){
     const selectGradeLevel = (value : string) => {
         setGradeLevelSelect(value)
         gradeLevel.map((item) => {
-            if(item.level == value){
+            if(`${item.level} - ${item.sem}` == value ){
                 setSubjects(item.subjects)
             }
         })
@@ -54,7 +54,7 @@ export default function Page(){
 
     return(
         <div className="w-full h-full">
-            <div className="w-4/6 bg-stone-50 shadow-lg m-auto mt-5  p-5 "> 
+            <div className="w-5/6 bg-stone-50 shadow-lg m-auto mt-5  p-5 "> 
 
                 <div className="flex gap-5">
 
@@ -88,7 +88,7 @@ export default function Page(){
                             </SelectTrigger>
                             <SelectContent>
                                 {gradeLevel.map((course, index) => (
-                                    <SelectItem key={index} value={course.level}>{course.level}</SelectItem>
+                                    <SelectItem key={index} value={`${course.level} - ${course.sem}`}> {course.level} - {course.sem}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -118,7 +118,7 @@ export default function Page(){
                                     return(
                                         <TableRow key={index}>
                                             <TableCell className="font-bold">{sub.code}</TableCell>
-                                            <TableCell className="max-w-[250px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
+                                            <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{"web system tecgnology 1 sdaaaaaaaaaaaaaaa sa sadasd  sadasdasd"}</TableCell>
                                             <TableCell>{sub.units}</TableCell>
                                             <TableCell>{sub.type}</TableCell>
                                             {/*DAYS*/}
@@ -127,11 +127,19 @@ export default function Page(){
                                             </TableCell>
                                             {/*START*/}
                                             <TableCell>
-                                                <Input className="w-15 shadow" />
+                                                <Input
+                                                    type="time"
+                                                    id="time-picker"  
+                                                    className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                                />
                                             </TableCell>
                                             {/*END*/}
                                             <TableCell>
-                                                <Input className="w-15 shadow" />
+                                                <Input
+                                                    type="time"
+                                                    id="time-picker"
+                                                    className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                                />
                                             </TableCell>
                                            
                                             <TableCell>{section ? <span> {section} </span> : <span className="text-red-500"> empty </span>}</TableCell>
@@ -141,8 +149,8 @@ export default function Page(){
                                             </TableCell>
 
                                             {/*END*/}
-                                              <TableCell>
-                                                <Input className="w-15 shadow" />
+                                              <TableCell className="w-62 ">
+                                                <Input className="w-full shadow" />
                                             </TableCell>
                                         </TableRow>
                                     )
