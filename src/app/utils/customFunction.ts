@@ -3,11 +3,16 @@
 export  const convertGradeLevel = (index : number) => {
     switch(index)
     {
-        case 1:  return "1st year"; break;
-        case 2:  return "2nd year"; break;
-        case 3:  return "3rd year"; break;
-        case 4:  return "4th year"; break;
-        case 5:  return "5th year"; break;
+        case 1:  return ["1st year" , "1st sem"]; break;
+        case 2:  return ["1st year" , "2nd sem"]; break;
+        case 3:  return ["2nd year" , "1st sem"]; break;
+        case 4:  return ["2nd year" , "2nd  sem"]; break;
+        case 5:  return ["3rd year" , "1st sem"]; break;
+        case 6:  return ["3rd year" , "2nd  sem"]; break;
+        case 7:  return ["4th year" , "1st sem"]; break;
+        case 8:  return ["4th year" , "2nd  sem"]; break;
+        case 9:  return ["5th year" , "1st sem"]; break;
+        case 10:  return ["5th year" , "2nd  sem"]; break;
         default:  return "error hahaha";  break;
     }
 }

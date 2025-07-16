@@ -39,6 +39,11 @@ const navigationItems = [
     url: "/pages/admin/section",
     icon: Building,
   },
+  {
+    title: "Add Section",
+    url: "/pages/admin/addSection",
+    icon: Building,
+  },
 ]
 
 const accountItems = [

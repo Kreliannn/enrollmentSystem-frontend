@@ -43,33 +43,31 @@ export function SubjectDisplay({ year, course , code} : { year : yearLevelInterf
         <div className=" gap-6 mb-6">
 
 
-        <Table>
-            <TableHeader>
-                <TableRow>
-                <TableHead>Subject</TableHead>
-                <TableHead>Code</TableHead>
-                <TableHead>Unit</TableHead>
-                <TableHead>Type</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {year.subjects.map((sub, index) => (
-                    <TableRow key={index}>
-                        <TableCell className="max-w-[250px] font-bold overflow-hidden">{sub.name}</TableCell>
-                        <TableCell className="text-gray-500">{sub.code}</TableCell>
-                        <TableCell>{sub.units}</TableCell>
-                        <TableCell>{sub.type}</TableCell>
-                    </TableRow>
-                ))}
-               
-            </TableBody>
-        </Table>
+          <Table>
+              <TableHeader>
+                  <TableRow>
+                  <TableHead>Code</TableHead>
+                  <TableHead>Subject</TableHead>
+                  <TableHead>Unit</TableHead>
+                  <TableHead>Type</TableHead>
+                  </TableRow>
+              </TableHeader>
+              <TableBody>
+                  {year.subjects.map((sub, index) => (
+                      <TableRow key={index}>
+                          <TableCell className="font-bold">{sub.code}</TableCell>
+                          <TableCell className="max-w-[250px]  text-gray-500  overflow-hidden">{sub.name}</TableCell>
+                          <TableCell>{sub.units}</TableCell>
+                          <TableCell>{sub.type}</TableCell>
+                      </TableRow>
+                  ))}
+                
+              </TableBody>
+          </Table>
 
         </div>
 
-        <DialogFooter>
-          <Button type="submit">  Click  </Button>
-        </DialogFooter>
+   
       </DialogContent>
     </Dialog>
   )

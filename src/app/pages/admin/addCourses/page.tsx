@@ -6,6 +6,8 @@ import { errorAlert, successAlert } from "@/app/utils/alert"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { backendUrl } from "@/app/utils/url"
+import { X } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function Page(){
     const [course, setCourse] = useState<courseInterface>({
@@ -34,7 +36,8 @@ export default function Page(){
 
     const addGradeLevel = () => {
         const newGradeLevel = {
-            level: convertGradeLevel(course.year.length + 1),
+            level: convertGradeLevel(course.year.length + 1)[0],
+            sem : convertGradeLevel(course.year.length + 1)[1],
             subjects: []
         }
         setCourse(prev => ({
@@ -132,7 +135,7 @@ export default function Page(){
                 if(!sub.code.trim()) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects code is empty`}
                 if(!sub.units) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is empty`}
                 if(sub.units <= 0) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is negative or 0`}
-                if(!Number.isInteger(sub.units)) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit has decimal`}
+                //if(!Number.isInteger(sub.units)) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit has decimal`}
                 if(!sub.type) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects type is empty`}
             })
         })
@@ -182,7 +185,7 @@ export default function Page(){
                     <button
                         onClick={addGradeLevel}
                         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
-                        hidden={course.year.length >= 5}
+                        hidden={course.year.length >= 10}
                     >
                         Add Grade Level
                     </button>
@@ -194,18 +197,18 @@ export default function Page(){
                         <div key={gradeIndex} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="flex-1 mr-4">
-                                    <label className="block  text-gray-700 mb-2 font-bold text-xl">
+                                    <label className="block  text-gray-700 mb-1 font-bold text-xl">
                                         Grade Level : {gradeLevel.level}
+                                    </label>
+                                    <label className="block  text-gray-500 mb-2 font-bold text-;g">
+                                         {gradeLevel.sem}
                                     </label>
                                     
                                 </div>
-                                <button
-                                    onClick={() => removeGradeLevel(gradeIndex)}
-                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm transition-colors"
-                                    hidden={gradeIndex != course.year.length - 1 }
-                                >
-                                    Remove
-                                </button>
+                                <Button variant="destructive" size="icon" className="hover:bg-red-700"  onClick={() => removeGradeLevel(gradeIndex)} hidden={gradeIndex != course.year.length - 1 } >
+                                    <X />
+                                </Button>
+                               
                             </div>
 
                             {/* Subjects Section */}
@@ -224,67 +227,80 @@ export default function Page(){
                                 <div className="space-y-3">
                                     {gradeLevel.subjects.map((subject, subjectIndex) => (
                                         <div key={subjectIndex} className="bg-white p-3 rounded-md border border-gray-200">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-2">
+                                           <div className="grid grid-cols-[repeat(4,_1fr)_auto] gap-3 mb-2">
+                                                {/* Subject Name */}
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                        Subject Name
+                                                    Subject Name
                                                     </label>
                                                     <input
-                                                        type="text"
-                                                        value={subject.name}
-                                                        onChange={(e) => updateSubject(gradeIndex, subjectIndex, 'name', e.target.value)}
-                                                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                        placeholder="Subject name"
+                                                    type="text"
+                                                    value={subject.name}
+                                                    onChange={(e) =>
+                                                        updateSubject(gradeIndex, subjectIndex, "name", e.target.value)
+                                                    }
+                                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                    placeholder="Subject name"
                                                     />
                                                 </div>
+
+                                                {/* Subject Code */}
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                        Subject Code
+                                                    Subject Code
                                                     </label>
                                                     <input
-                                                        type="text"
-                                                        value={subject.code}
-                                                        onChange={(e) => updateSubject(gradeIndex, subjectIndex, 'code', e.target.value)}
-                                                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                        placeholder="Subject code"
+                                                    type="text"
+                                                    value={subject.code}
+                                                    onChange={(e) =>
+                                                        updateSubject(gradeIndex, subjectIndex, "code", e.target.value)
+                                                    }
+                                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                    placeholder="Subject code"
                                                     />
                                                 </div>
+
+                                                {/* Units */}
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                        Units
+                                                    Units
                                                     </label>
                                                     <input
-                                                        type="number"
-                                                        value={subject.units}
-                                                        onChange={(e) => updateSubject(gradeIndex, subjectIndex, 'units', e.target.value)}
-                                                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                        placeholder="Units"
-                                                        min="0"
+                                                    type="number"
+                                                    value={subject.units}
+                                                    onChange={(e) =>
+                                                        updateSubject(gradeIndex, subjectIndex, "units", e.target.value)
+                                                    }
+                                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                    placeholder="Units"
+                                                    min="0"
                                                     />
                                                 </div>
+
+                                                {/* Type */}
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                        Type
+                                                    Type
                                                     </label>
                                                     <select
-                                                        value={subject.type}
-                                                        onChange={(e) => updateSubject(gradeIndex, subjectIndex, 'type', e.target.value)}
-                                                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                    value={subject.type}
+                                                    onChange={(e) =>
+                                                        updateSubject(gradeIndex, subjectIndex, "type", e.target.value)
+                                                    }
+                                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     >
-                                                        <option value=""> selec type </option>
-                                                        <option value="lec">Lec</option>
-                                                        <option value="lab">Lab</option>
+                                                    <option value="">Select type</option>
+                                                    <option value="lec">Lec</option>
+                                                    <option value="lab">Lab</option>
                                                     </select>
                                                 </div>
-                                            </div>
-                                            <div className="flex justify-end">
-                                                <button
-                                                    onClick={() => removeSubject(gradeIndex, subjectIndex)}
-                                                    className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs transition-colors"
-                                                  
-                                                >
-                                                    Remove Subject
-                                                </button>
+
+                                                {/* X Button */}
+                                                <div className="flex items-end">
+                                                    <Button variant="destructive" size="icon" className="hover:bg-red-700"  onClick={() => removeSubject(gradeIndex, subjectIndex)}>
+                                                        <X />
+                                                    </Button>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -298,7 +314,7 @@ export default function Page(){
                 <div className="mt-8 flex justify-end">
                     <button
                         onClick={handleSubmit}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors w-full"
                     >
                         Submit Course
                     </button>
