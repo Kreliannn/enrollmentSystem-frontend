@@ -13,10 +13,7 @@ export interface sectionSubjectsInterface  {
     end : string,
     section : string,
     room : string,
-    instructor : {
-        instructor_id : string,
-        name : string
-    },
+    instructor : string,
     students : enrolledInterface[]
 }
 

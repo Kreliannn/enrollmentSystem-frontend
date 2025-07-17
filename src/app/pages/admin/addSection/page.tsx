@@ -107,10 +107,7 @@ export default function Page(){
                         end : "",
                         section : section,
                         room : "",
-                        instructor : {
-                            instructor_id : "",
-                            name : "",
-                        },
+                        instructor : "",
                         students : []
                     }
                     setSubjectData((prev) => [...prev, subjectObj])
@@ -129,21 +126,6 @@ export default function Page(){
         setSubjectData(data)
     }
 
-    const selectProf = (id : string, index : number) => {
-        const data = [...subjectData]
-        prof.forEach((item) => {
-            if(item._id == id){
-                data[index] = {
-                    ...data[index] ,
-                    instructor : {
-                        instructor_id : id,
-                        name : item.name
-                    }
-                }
-            }
-        })
-        setSubjectData(data)
-    }
 
     
    const submitHandler = () => {
@@ -154,7 +136,7 @@ export default function Page(){
             if (!sub.start.trim()) return errorAlert(`subject start is empty on  ${sub.code}`);
             if (!sub.end.trim()) return errorAlert(`subject end is empty on  ${sub.code}`);
             if (!sub.room.trim()) return errorAlert(`subject room is empty on  ${sub.code}`);
-            if (!sub.instructor.name.trim()) return errorAlert(`subject instructor is empty on  ${sub.code}`);
+            if (!sub.instructor.trim()) return errorAlert(`subject instructor is empty on  ${sub.code}`);
         }
 
         const subjectFormatedTime = subjectData.map((sub) => ({...sub, start : formatToAmPm(sub.start),  end : formatToAmPm(sub.end)}))
@@ -167,7 +149,6 @@ export default function Page(){
             subjects : subjectFormatedTime,
             students : []
         }
-        console.log(sectionObj)
         mutation.mutate(sectionObj)
    }
 
@@ -281,7 +262,7 @@ export default function Page(){
 
                                             {/*INSTRUVTOR*/}
                                             <TableCell className="w-62 ">
-                                                <Select onValueChange={(value) => selectProf(value, index)} value={sub.instructor.instructor_id}>
+                                                <Select onValueChange={(value) =>  updateSubjectData("instructor", value, index)} value={sub.instructor}>
                                                     <SelectTrigger className="w-full">
                                                         <SelectValue placeholder="Select Instructor" />
                                                     </SelectTrigger>
