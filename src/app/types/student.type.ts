@@ -8,10 +8,14 @@ export interface studentInterface {
     gender : string,
     sem : string,
     section : string,
-    subject : sectionSubjectsInterface[],
-    addedSubject : sectionSubjectsInterface[],
+    subjects : sectionSubjectsInterface[],
+    addedSubjects : sectionSubjectsInterface[],
     passed : string[],
     failed : string[]
 }
 
+
+export interface getStudentInterface extends studentInterface {
+    _id : string
+}
 
