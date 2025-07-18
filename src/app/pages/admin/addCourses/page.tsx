@@ -63,11 +63,10 @@ export default function Page(){
 
     const addSubject = (gradeIndex: number) => {
         const newSubject = {
-            course : course.code,
+            course : courseCode,
             name: "",
             code: "",
             units: 0,
-            type: "",
             prerequisite : ""
         }
         setCourse(prev => ({
@@ -149,7 +148,6 @@ export default function Page(){
                 if(sub.units <= 0) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is negative or 0`}
                 if(sub.units > 3) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is greater than 3`}
                 if(!Number.isInteger(Number(sub.units))) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit has decimal`}
-                if(!sub.type) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects type is empty`}
                 subCode.push(sub.code.trim())
             })
         })
@@ -285,7 +283,7 @@ export default function Page(){
                                 <div className="space-y-3">
                                     {gradeLevel.subjects.map((subject, subjectIndex) => (
                                         <div key={subjectIndex} className="bg-white p-3 rounded-md border border-gray-200">
-                                           <div className="grid grid-cols-[repeat(5,_1fr)_auto] gap-3 mb-2">
+                                           <div className="grid grid-cols-[repeat(4,_1fr)_auto] gap-3 mb-2">
                                                 {/* Subject Name */}
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
@@ -324,6 +322,7 @@ export default function Page(){
                                                     </label>
                                                     <Input
                                                     type="text"
+                                                    disabled={gradeIndex == 0}
                                                     value={subject.prerequisite}
                                                     onChange={(e) =>
                                                         updateSubject(gradeIndex, subjectIndex, "prerequisite", e.target.value.trim())
@@ -350,21 +349,7 @@ export default function Page(){
                                                     />
                                                 </div>
 
-                                                {/* Type */}
-                                                <div>
-                                                    <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                    Type
-                                                    </label>
-                                                    <Select value={subject.type} onValueChange={(value : string) => updateSubject(gradeIndex, subjectIndex, "type", value)}>
-                                                        <SelectTrigger className="mt-1.5 border-gray-200  w-full">
-                                                        <SelectValue placeholder="Select gender" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                        <SelectItem value="lec">Lec</SelectItem>
-                                                        <SelectItem value="lab">Lab</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                </div>
+                                             
 
                                                 {/* X Button */}
                                                 <div className="flex items-end">

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState , useEffect} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -9,11 +9,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { User, Mail, Lock, Phone } from "lucide-react"
 import { errorAlert, successAlert } from "@/app/utils/alert"
 import { profInterface } from "@/app/types/prof.type"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation , useQuery} from "@tanstack/react-query"
 import axios from "axios"
 import { backendUrl } from "@/app/utils/url"
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import { getProfInterface } from "@/app/types/prof.type"
+
 
 export default function Page() {
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,9 +26,19 @@ export default function Page() {
   })
 
 
+  const [prof, setProf] = useState<getProfInterface[]>([])
+
+  const { data } = useQuery({
+    queryKey : ["profs"],
+    queryFn : () => axios.get(backendUrl("/prof"))
+  })
+
+  useEffect(() => { data?.data && setProf(data.data) }, [data])
+
+
   const mutation = useMutation({
     mutationFn : (data : profInterface) => axios.post(backendUrl("/prof"), data),
-    onSuccess : () => {
+    onSuccess : (response) => {
         setFormData({
             name: "",
             email: "",
@@ -32,6 +46,7 @@ export default function Page() {
             contact: "",
           })
         successAlert("Prof Added")
+        setProf(response.data)
     },
     onError : () => {
         errorAlert("Email Already Taken")
@@ -74,8 +89,9 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center p-6">
-        <Card className="w-full max-w-md">
+      <div className="flex  p-6 gap-10">
+        
+        <Card className="w-[40%] ">
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-center">Professor Details</CardTitle>
           </CardHeader>
@@ -163,6 +179,36 @@ export default function Page() {
             </form>
           </CardContent>
         </Card>
+
+
+        <Card className="w-[60%] h-[490px] overflow-auto" >
+         
+          <CardContent>
+            <Table>
+              <TableHeader >
+                  <TableRow>
+                      <TableHead>intructor name</TableHead>
+                      <TableHead>email</TableHead>
+                      <TableHead>contact</TableHead>
+                      <TableHead>Handle Subjects</TableHead>
+                  </TableRow>
+              </TableHeader>
+              <TableBody>
+                  {prof?.map((item, index) => (
+                      <TableRow key={index}>
+                          <TableCell >{item.name}</TableCell>
+                          <TableCell>{item.email}</TableCell>
+                          <TableCell>{item.contact}</TableCell>
+                          <TableCell>{item.schedules.length}</TableCell>
+                      </TableRow>
+                  ))}
+
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        
       </div>
     </div>
   )

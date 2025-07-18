@@ -4,12 +4,10 @@ export interface subjectsInterface {
     name : string,
     code : string,
     units : number,
-    type : string,
     prerequisite : string
 }
 
 export interface yearLevelInterface {
-   
     level : string,
     sem : string,
     tuition : number,

@@ -50,7 +50,6 @@ export function SubjectDisplay({ year, course , code} : { year : yearLevelInterf
                   <TableHead>Subject</TableHead>
                   <TableHead>Prerequisite</TableHead>
                   <TableHead>Unit</TableHead>
-                  <TableHead>Type</TableHead>
                   </TableRow>
               </TableHeader>
               <TableBody>
@@ -59,8 +58,7 @@ export function SubjectDisplay({ year, course , code} : { year : yearLevelInterf
                           <TableCell className="font-bold">{sub.code}</TableCell>
                           <TableCell className="max-w-[250px]  text-gray-500  overflow-hidden">{sub.name}</TableCell>
                           <TableCell className=" text-gray-500">{sub.prerequisite}</TableCell>
-                          <TableCell>{sub.units}</TableCell>
-                          <TableCell>{sub.type}</TableCell>
+                          <TableCell>{sub.units}</TableCell>            
                       </TableRow>
                   ))}
                 

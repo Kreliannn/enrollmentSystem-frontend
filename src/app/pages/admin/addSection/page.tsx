@@ -103,7 +103,6 @@ export default function Page(){
                         units : sub.units,
                         course : sub.course,
                         prerequisite : sub.prerequisite ,
-                        type : sub.type,
                         days : "",
                         start : "",
                         end : "",
@@ -151,6 +150,7 @@ export default function Page(){
             subjects : subjectFormatedTime,
             students : []
         }
+        console.log(sectionObj)
         mutation.mutate(sectionObj)
    }
 
@@ -213,7 +213,6 @@ export default function Page(){
                                     <TableHead>Code</TableHead>
                                     <TableHead>Subject</TableHead>
                                     <TableHead>Unit</TableHead>
-                                    <TableHead>Type</TableHead>
                                     <TableHead>Days</TableHead>
                                     <TableHead>Start</TableHead>
                                     <TableHead>End</TableHead>
@@ -230,7 +229,6 @@ export default function Page(){
                                             <TableCell className="font-bold">{sub.code}</TableCell>
                                             <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
                                             <TableCell>{sub.units}</TableCell>
-                                            <TableCell>{sub.type}</TableCell>
                                             {/*DAYS*/}
                                             <TableCell>
                                                 <Input className="w-15 shadow"  value={sub.days} onChange={(e) => updateSubjectData("days", e.target.value, index)}/>

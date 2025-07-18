@@ -31,7 +31,6 @@ export default function Page(){
                                 <TableHead>Section</TableHead>
                                 <TableHead>Code</TableHead>
                                 <TableHead>Subject</TableHead>
-                                <TableHead>Type</TableHead>
                                 <TableHead>Days</TableHead>
                                 <TableHead>Start</TableHead>
                                 <TableHead>End</TableHead>
@@ -46,7 +45,6 @@ export default function Page(){
                                     <TableCell className="font-bold">{sub.section}</TableCell>
                                     <TableCell>{sub.code}</TableCell>
                                     <TableCell className="max-w-[250px]  text-gray-500  overflow-hidden">{sub.name}</TableCell>
-                                    <TableCell>{sub.type}</TableCell>
                                     <TableCell>{sub.days}</TableCell>
                                     <TableCell>{sub.start}</TableCell>
                                     <TableCell>{sub.end}</TableCell>
