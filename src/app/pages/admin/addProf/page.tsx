@@ -34,7 +34,7 @@ export default function Page() {
         successAlert("Prof Added")
     },
     onError : () => {
-        errorAlert("error occur")
+        errorAlert("Email Already Taken")
     }
   })
 
@@ -58,7 +58,7 @@ export default function Page() {
     
     const profObj :  profInterface = {
         ...formData,
-        shedules : []
+        schedules : []
     }
 
     mutation.mutate(profObj)
@@ -147,7 +147,7 @@ export default function Page() {
                   <Input
                     id="contact"
                     name="contact"
-                    type="tel"
+                    type="number"
                     placeholder="Enter contact number"
                     value={formData.contact}
                     onChange={handleInputChange}

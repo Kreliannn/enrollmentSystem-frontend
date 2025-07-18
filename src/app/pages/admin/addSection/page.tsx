@@ -101,6 +101,8 @@ export default function Page(){
                         name : sub.name,
                         code : sub.code,
                         units : sub.units,
+                        course : sub.course,
+                        prerequisite : sub.prerequisite ,
                         type : sub.type,
                         days : "",
                         start : "",

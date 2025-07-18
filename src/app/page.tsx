@@ -68,15 +68,17 @@ export default function Home() {
                 <div className="mx-auto mb-4 p-3 bg-purple-100 rounded-full w-fit">
                   <UserCheck className="h-8 w-8 text-purple-600" />
                 </div>
-                <CardTitle className="text-xl text-slate-800">Registrar</CardTitle>
+                <CardTitle className="text-xl text-slate-800">Instructor</CardTitle>
                 <CardDescription className="text-slate-600">
                   Process enrollments, manage student records, and handle registrations
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white" size="lg">
-                  Registrar Login
-                </Button>
+                <Link href={"/auth/prof"}>   
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white" size="lg">
+                    Instructor Login
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>

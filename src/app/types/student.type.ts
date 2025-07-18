@@ -1,4 +1,4 @@
-import { sectionSubjects } from "./section.type"
+import { sectionSubjectsInterface } from "./section.type"
 
 
 export interface studentInterface {
@@ -23,7 +23,7 @@ export interface getStudentInterface {
     gender : string,
     sem : string,
     section : string,
-    subjects : sectionSubjects[],
+    subjects : sectionSubjectsInterface[],
     passed : string[],
     failed : string[]
 }

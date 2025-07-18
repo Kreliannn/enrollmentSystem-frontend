@@ -5,7 +5,7 @@ export interface profInterface {
     email : string,
     password : string,
     contact : string,
-    shedules : sectionSubjectsInterface[]
+    schedules : sectionSubjectsInterface[]
 }
 
 

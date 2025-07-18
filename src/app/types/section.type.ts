@@ -4,6 +4,7 @@ export interface enrolledInterface {
 }
 
 export interface sectionSubjectsInterface  {
+    course : string,
     name : string,
     code : string,
     prerequisite : string

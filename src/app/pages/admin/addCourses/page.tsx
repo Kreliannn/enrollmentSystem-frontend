@@ -8,6 +8,9 @@ import axios from "axios"
 import { backendUrl } from "@/app/utils/url"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Plus } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function Page(){
     const [course, setCourse] = useState<courseInterface>({
@@ -40,6 +43,7 @@ export default function Page(){
         const newGradeLevel = {
             level: convertGradeLevel(course.year.length + 1)[0],
             sem : convertGradeLevel(course.year.length + 1)[1],
+            tuition : 0,
             subjects: []
         }
         setCourse(prev => ({
@@ -48,17 +52,18 @@ export default function Page(){
         }))
     }
 
-    const updateGradeLevel = (index: number, level: string) => {
+    const updateGradeLevel = (index: number, tuition: number) => {
         setCourse(prev => ({
             ...prev,
             year: prev.year.map((year, i) => 
-                i === index ? { ...year, level } : year
+                i === index ? { ...year, tuition } : year
             )
         }))
     }
 
     const addSubject = (gradeIndex: number) => {
         const newSubject = {
+            course : course.code,
             name: "",
             code: "",
             units: 0,
@@ -135,6 +140,7 @@ export default function Page(){
 
         
         finalCourse.year.forEach((item, index) => {
+            if(item.tuition <= 0) validation = {isError : true, message : `tuition is 0 or negative  in ${convertGradeLevel(index + 1)}`}
             if(item.subjects.length == 0) validation = {isError : true, message : `no subject found in ${convertGradeLevel(index + 1)}`}
             item.subjects.forEach((sub, subIndex) => {
                 if(!sub.name.trim()) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects name is empty`}
@@ -192,11 +198,11 @@ export default function Page(){
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         Course Name
                     </label>
-                    <input
+                    <Input
                         type="text"
                         value={courseName}
                         onChange={(e) => setCourseName(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 border"
                         placeholder="Enter course name"
                     />
                 </div>
@@ -207,24 +213,24 @@ export default function Page(){
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                         Course Code
                     </label>
-                    <input
+                    <Input
                         type="text"
                         value={courseCode}
                         onChange={(e) => setCourseCode(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2"
                         placeholder="Enter course code"
                     />
                 </div>
 
                 {/* Add Grade Level Button */}
                 <div className="mb-6">
-                    <button
+                    <Button
                         onClick={addGradeLevel}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
+                        className=" text-white px-4 py-2 rounded-md transition-colors"
                         hidden={course.year.length >= 10}
                     >
-                        Add Grade Level
-                    </button>
+                      <Plus /> Add Grade Level
+                    </Button>
                 </div>
 
                 {/* Grade Levels */}
@@ -233,12 +239,26 @@ export default function Page(){
                         <div key={gradeIndex} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="flex-1 mr-4">
+
                                     <label className="block  text-gray-700 mb-1 font-bold text-xl">
                                         Grade Level : {gradeLevel.level}
+                                        <span className="  text-gray-400 mb-2 font-bold ">  {gradeLevel.sem}</span>
                                     </label>
-                                    <label className="block  text-gray-500 mb-2 font-bold text-;g">
-                                         {gradeLevel.sem}
-                                    </label>
+                                 
+
+                                    <div className="mt-2 mb-1"> 
+                                        <label className="block text-lg font-medium text-gray-600 mb-1">
+                                            Tuition Fee
+                                        </label>
+                                        <Input
+                                            type="number"
+                                            value={gradeLevel.tuition}
+                                            onChange={(e) => updateGradeLevel(gradeIndex, Number(e.target.value))}
+                                            className="w-full px-2 py-1 "
+                                            placeholder="Un Tuition Feeits"
+                                            min="0"
+                                        />
+                                    </div>
                                     
                                 </div>
                                 <Button variant="destructive" size="icon" className="hover:bg-red-700"  onClick={() => removeGradeLevel(gradeIndex)} hidden={gradeIndex != course.year.length - 1 } >
@@ -247,16 +267,18 @@ export default function Page(){
                                
                             </div>
 
+                            <hr  className="mb-3"/>
+
                             {/* Subjects Section */}
                             <div className="mb-4">
                                 <div className="flex justify-between items-center mb-3">
-                                    <h3 className="text-lg font-medium text-gray-700">Subjects</h3>
-                                    <button
+                                    <h3 className="text-xl font-bold   text-gray-700">Subjects:</h3>
+                                    <Button
                                         onClick={() => addSubject(gradeIndex)}
-                                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm transition-colors"
+                                        className=" text-white px-3 py-1 rounded-md text-sm transition-colors"
                                     >
-                                        Add Subject
-                                    </button>
+                                         <Plus />  Add Subject
+                                    </Button>
                                 </div>
 
                                 {/* Subjects List */}
@@ -269,7 +291,7 @@ export default function Page(){
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
                                                     Subject Name
                                                     </label>
-                                                    <input
+                                                    <Input
                                                     type="text"
                                                     value={subject.name}
                                                     onChange={(e) =>
@@ -285,7 +307,7 @@ export default function Page(){
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
                                                     Subject Code
                                                     </label>
-                                                    <input
+                                                    <Input
                                                     type="text"
                                                     value={subject.code}
                                                     onChange={(e) =>
@@ -300,7 +322,7 @@ export default function Page(){
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
                                                     prerequisite
                                                     </label>
-                                                    <input
+                                                    <Input
                                                     type="text"
                                                     value={subject.prerequisite}
                                                     onChange={(e) =>
@@ -316,7 +338,7 @@ export default function Page(){
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
                                                     Units
                                                     </label>
-                                                    <input
+                                                    <Input
                                                     type="number"
                                                     value={subject.units}
                                                     onChange={(e) =>
@@ -333,17 +355,15 @@ export default function Page(){
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
                                                     Type
                                                     </label>
-                                                    <select
-                                                    value={subject.type}
-                                                    onChange={(e) =>
-                                                        updateSubject(gradeIndex, subjectIndex, "type", e.target.value)
-                                                    }
-                                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                    >
-                                                    <option value="">Select type</option>
-                                                    <option value="lec">Lec</option>
-                                                    <option value="lab">Lab</option>
-                                                    </select>
+                                                    <Select value={subject.type} onValueChange={(value : string) => updateSubject(gradeIndex, subjectIndex, "type", value)}>
+                                                        <SelectTrigger className="mt-1.5 border-gray-200  w-full">
+                                                        <SelectValue placeholder="Select gender" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                        <SelectItem value="lec">Lec</SelectItem>
+                                                        <SelectItem value="lab">Lab</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
                                                 </div>
 
                                                 {/* X Button */}
@@ -363,12 +383,12 @@ export default function Page(){
 
                 {/* Submit Button */}
                 <div className="mt-8 flex justify-end">
-                    <button
+                    <Button
                         onClick={handleSubmit}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors w-full"
+                        className=" text-white px-6 py-2 rounded-md font-medium transition-colors w-full"
                     >
                         Submit Course
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>

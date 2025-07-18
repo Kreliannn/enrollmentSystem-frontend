@@ -1,5 +1,6 @@
 
 export interface subjectsInterface {
+    course : string,
     name : string,
     code : string,
     units : number,
@@ -8,8 +9,10 @@ export interface subjectsInterface {
 }
 
 export interface yearLevelInterface {
+   
     level : string,
     sem : string,
+    tuition : number,
     subjects :  subjectsInterface[]
 }
 
