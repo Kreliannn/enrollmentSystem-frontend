@@ -4,6 +4,7 @@ export interface subjectsInterface {
     code : string,
     units : number,
     type : string,
+    prerequisite : string
 }
 
 export interface yearLevelInterface {

@@ -25,5 +25,9 @@ export const formatToAmPm = (timeStr: string) => {
     return `${hour}:${minute} ${ampm}`;
   }
   
+
+export function hasDuplicates(arr : string[]) {
+    return new Set(arr).size !== arr.length;
+  }
  
   

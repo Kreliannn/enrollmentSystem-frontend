@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { courseInterface } from "@/app/types/courses.type"
-import { convertGradeLevel } from "@/app/utils/customFunction"
+import { convertGradeLevel , hasDuplicates} from "@/app/utils/customFunction"
 import { errorAlert, successAlert } from "@/app/utils/alert"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
@@ -18,6 +18,8 @@ export default function Page(){
 
     const [courseName, setCourseName] = useState("")
     const [courseCode, setCourseCode] = useState("")
+
+   
 
     const mutation = useMutation({
         mutationFn : (data : courseInterface) => axios.post(backendUrl("/course"), data),
@@ -60,7 +62,8 @@ export default function Page(){
             name: "",
             code: "",
             units: 0,
-            type: ""
+            type: "",
+            prerequisite : ""
         }
         setCourse(prev => ({
             ...prev,
@@ -123,25 +126,50 @@ export default function Page(){
         if(!courseName.trim() || !courseCode.trim()) return errorAlert("course name or code is empty")
         if(course.year.length == 0) return errorAlert("grade level is empty")
 
+        const subCode : string[] = []
+
         let validation = {
             isError : false,
             message : ""
         }
 
+        
         finalCourse.year.forEach((item, index) => {
             if(item.subjects.length == 0) validation = {isError : true, message : `no subject found in ${convertGradeLevel(index + 1)}`}
-            item.subjects.forEach((sub) => {
+            item.subjects.forEach((sub, subIndex) => {
                 if(!sub.name.trim()) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects name is empty`}
                 if(!sub.code.trim()) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects code is empty`}
                 if(!sub.units) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is empty`}
                 if(sub.units <= 0) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is negative or 0`}
-                //if(!Number.isInteger(sub.units)) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit has decimal`}
+                if(sub.units > 3) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit is greater than 3`}
+                if(!Number.isInteger(Number(sub.units))) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects unit has decimal`}
                 if(!sub.type) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects type is empty`}
+                subCode.push(sub.code.trim())
             })
         })
 
+        if(hasDuplicates(subCode)) validation = {isError : true, message : `subject code must be unique. duplication is not allowed`}
+
+        finalCourse.year.forEach((item, index) => {
+            item.subjects.forEach((sub) => {
+               if(sub.prerequisite){
+                    if(!subCode.includes(sub.prerequisite)) validation = {isError : true, message : `${convertGradeLevel(index + 1)} prerequisite code is not exist. please provide code that exist in this course`}
+               }
+            })
+        })
+
+
         if(validation.isError) return errorAlert(validation.message)
 
+
+        finalCourse.year.forEach((item, index) => {
+            item.subjects.forEach((sub, subIndex) => {
+                if(!sub.prerequisite.trim()) finalCourse.year[index].subjects[subIndex].prerequisite = "none"
+            })
+        })
+
+        console.log(finalCourse)
+    
         mutation.mutate(finalCourse)
 
     }
@@ -235,7 +263,7 @@ export default function Page(){
                                 <div className="space-y-3">
                                     {gradeLevel.subjects.map((subject, subjectIndex) => (
                                         <div key={subjectIndex} className="bg-white p-3 rounded-md border border-gray-200">
-                                           <div className="grid grid-cols-[repeat(4,_1fr)_auto] gap-3 mb-2">
+                                           <div className="grid grid-cols-[repeat(5,_1fr)_auto] gap-3 mb-2">
                                                 {/* Subject Name */}
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-600 mb-1">
@@ -261,10 +289,25 @@ export default function Page(){
                                                     type="text"
                                                     value={subject.code}
                                                     onChange={(e) =>
-                                                        updateSubject(gradeIndex, subjectIndex, "code", e.target.value)
+                                                        updateSubject(gradeIndex, subjectIndex, "code", e.target.value.trim())
                                                     }
                                                     className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     placeholder="Subject code"
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                                                    prerequisite
+                                                    </label>
+                                                    <input
+                                                    type="text"
+                                                    value={subject.prerequisite}
+                                                    onChange={(e) =>
+                                                        updateSubject(gradeIndex, subjectIndex, "prerequisite", e.target.value.trim())
+                                                    }
+                                                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                                    placeholder="(not required)"
                                                     />
                                                 </div>
 

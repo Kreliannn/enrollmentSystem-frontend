@@ -6,6 +6,7 @@ export interface enrolledInterface {
 export interface sectionSubjectsInterface  {
     name : string,
     code : string,
+    prerequisite : string
     units : number,
     type : string,
     days : string,
