@@ -32,7 +32,6 @@ export default function Page(){
         course : "",
         level : "",
         sem : ""
-
     })
 
     const [studentId, setStudenetId] = useState("")
@@ -44,6 +43,7 @@ export default function Page(){
             setIsLoading(false)
             if(!response.data) return errorAlert("student id does not exist")
             const studentData : getStudentInterface = response.data
+            if(studentData.section != "none") return errorAlert("student is already enrolled")
             setStudent({
                 name : studentData.name,
                 studentId : studentData.studentId,
@@ -148,7 +148,7 @@ export default function Page(){
                                 <div key={index} className="bg-stone-50 rounded-lg group hover:shadow-xl transition-all duration-300 hover:-translate-y-1  border-0 shadow-md p-7">
                                     <h1 className="font-bold text-lg mb-1"> {`${section.course} ${section.section}`} </h1>
                                     <h2 className="font-semibold text-md text-gray-600 mb-1">  {`${section.level} ${section.sem}`}  </h2>
-                                    <h1 className="mb-2"> Enrolled {section.students.length} </h1>
+                                    <h1 className="mb-2" > Enrolled : {section.students.length} </h1>
                                     <div className="flex gap-2">
                                         <SectionDisplay section={section} />
                                         <Button onClick={() => enrollStudent(section)} className=" bg-green-500 hover:bg-green-600 shadow" > Enroll </Button>

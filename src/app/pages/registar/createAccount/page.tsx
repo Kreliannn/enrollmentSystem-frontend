@@ -17,6 +17,7 @@ import { errorAlert, successAlert } from "@/app/utils/alert"
 
 interface dataType {
     name : string,
+    password : string,
     level : string,
     sem : string,
     course : string,
@@ -26,6 +27,7 @@ interface dataType {
 
 export default function Page() {
   const [name, setName] = useState("")
+  const [password, setPassword] = useState("")
   const [level, setLevel] = useState("")
   const [sem, setSem] = useState("")
   const [course, setCourse] = useState("")
@@ -67,6 +69,7 @@ export default function Page() {
   const submitHandler = () => {
     const studentObj : dataType = {
         name : name,
+        password : password,
         level : level,
         sem : sem,
         course : course,
@@ -95,7 +98,7 @@ export default function Page() {
           <CardContent className="space-y-6">
             {/* Personal Information */}
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="md:col-span-2">
                   <Label htmlFor="name" className="text-sm font-medium text-gray-700">
                     Full Name
@@ -108,6 +111,22 @@ export default function Page() {
                     className="mt-1.5 border-gray-200 "
                   />
                 </div>
+
+                <div className="md:col-span-1">
+                  <Label htmlFor="pass" className="text-sm font-medium text-gray-700">
+                    Password
+                  </Label>
+                  <Input
+                    id="pass"
+                    value={password}
+                    type="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="enter password"
+                    className="mt-1.5 border-gray-200 "
+                  />
+                </div>
+
+
                 <div>
                   <Label htmlFor="gender" className="text-sm font-medium text-gray-700">
                     Gender
@@ -236,7 +255,7 @@ export default function Page() {
                 <Button
                   onClick={submitHandler}
                   className=" text-white px-8 py-2.5 font-medium w-full"
-                  disabled={!name.trim() || !course || !level || !sem || !gender}
+                  disabled={!name.trim() || !course || !level || !sem || !gender || !password}
                 >
                   Create Student Profile
                 </Button>

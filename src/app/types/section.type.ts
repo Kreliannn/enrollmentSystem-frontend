@@ -15,6 +15,22 @@ export interface sectionSubjectsInterface  {
     students : string[]
 }
 
+export interface getSectionSubjectsInterface  {
+    course : string,
+    name : string,
+    code : string,
+    prerequisite : string
+    units : number,
+    days : string,
+    start : string,
+    end : string,
+    section : string,
+    room : string,
+    instructor : getProfInterface,
+    students : string[]
+}
+
+
 
 export interface sectionInterface{
     course : string,

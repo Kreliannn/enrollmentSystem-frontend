@@ -54,7 +54,7 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link href={""}>   
+                <Link href={"/auth/student"}>   
                   <Button className="w-full bg-green-600 hover:bg-green-700 text-white" size="lg">
                     Student Login
                   </Button>
