@@ -34,6 +34,11 @@ const navigationItems = [
     url: "/pages/registar/createAccount",
     icon: BookOpen,
   },
+  {
+    title: "Enroll Student Regular",
+    url: "/pages/registar/enrollRegular",
+    icon: BookOpen,
+  },
 ]
 
 const accountItems = [
