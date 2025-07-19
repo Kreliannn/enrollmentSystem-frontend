@@ -9,6 +9,8 @@ import { backendUrl } from "@/app/utils/url"
 import { successAlert, errorAlert } from "@/app/utils/alert"
 import { getSectionInterface } from "@/app/types/section.type"
 import { getStudentInterface } from "@/app/types/student.type"
+import { SectionDisplay } from "./components/sectionDisplay"
+import { confirmAlert } from "@/app/utils/alert"
 
 export default function Page(){
 
@@ -24,6 +26,15 @@ export default function Page(){
 
     const [availableSection, setAvailableSection] = useState<getSectionInterface[]>([])
 
+    const [student, setStudent] = useState({
+        name : "",
+        studentId : "",
+        course : "",
+        level : "",
+        sem : ""
+
+    })
+
     const [studentId, setStudenetId] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
@@ -32,10 +43,34 @@ export default function Page(){
         onSuccess : (response) => {
             setIsLoading(false)
             if(!response.data) return errorAlert("student id does not exist")
-            const student : getStudentInterface = response.data
+            const studentData : getStudentInterface = response.data
+            setStudent({
+                name : studentData.name,
+                studentId : studentData.studentId,
+                course : studentData.course,
+                level : studentData.level,
+                sem : studentData.sem
+            })
             successAlert("student found")
-            setStudenetId("")
-            setAvailableSection(section.filter((item) => (item.course == student.course && item.sem == student.sem && item.level == student.level )))
+            setAvailableSection(section.filter((item) => (item.course == studentData.course && item.sem == studentData.sem && item.level == studentData.level )))
+        },
+        onError : () => errorAlert("error occour")
+    })
+
+    const enrollStudentMutation = useMutation({
+        mutationFn : (data : { studentId : string, sectionId : string}) => axios.post(backendUrl("/student/enroll"), data),
+        onSuccess : (response) => {
+          successAlert("student enrolled")
+          setStudenetId("")
+          setStudent({
+            name : "",
+            studentId : "",
+            course : "",
+            level : "",
+            sem : ""
+    
+        })
+        setAvailableSection([])
         },
         onError : () => errorAlert("error occour")
     })
@@ -44,6 +79,12 @@ export default function Page(){
         if(!studentId.trim()) return errorAlert("provide student id")
         mutation.mutate(studentId)
         setIsLoading(true)
+    }
+
+    const enrollStudent = (section : getSectionInterface) => {
+        confirmAlert(`are you sure ${student.name} want to enroll to ${section.section}`, "enroll", () => {
+            enrollStudentMutation.mutate({ studentId : student.studentId, sectionId : section._id})
+        })
     }
 
 
@@ -75,19 +116,50 @@ export default function Page(){
                     </div>
                 </div>
 
-
-                <div className="m-auto  w-4/6 mt-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-                        {availableSection?.map((section, index) => (
-                            <div key={index} className="rounded-lg group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white border-0 shadow-md p-7">
-                                <h1 className="font-bold text-lg mb-1"> {`${section.course} ${section.section}`} </h1>
-                                <h2 className="font-semibold text-md text-gray-600 mb-1">  {`${section.level} ${section.sem}`}  </h2>
-                                <h1 className="mb-2"> Enrolled {section.students.length} </h1>
-                                <Button className="w-full"> visit </Button>
+                {availableSection.length != 0 && (
+                    <div className="m-auto  w-4/6 mt-10">
+                       <div className="w-full shadow-lg mb-10 bg-stone-50 p-4 rounded-xl">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-sm sm:text-base">
+                            <div>
+                                <p className="text-gray-500 font-medium">Student ID</p>
+                                <p className="font-semibold text-gray-800">{student.studentId}</p>
+                                </div>
+                                <div>
+                                <p className="text-gray-500 font-medium">Name</p>
+                                <p className="font-semibold text-gray-800">{student.name}</p>
+                                </div>
+                                <div>
+                                <p className="text-gray-500 font-medium">Course</p>
+                                <p className="font-semibold text-gray-800">{student.course}</p>
+                                </div>
+                                <div>
+                                <p className="text-gray-500 font-medium">Level</p>
+                                <p className="font-semibold text-gray-800">{student.level}</p>
+                                </div>
+                                <div>
+                                <p className="text-gray-500 font-medium">Semester</p>
+                                <p className="font-semibold text-gray-800">{student.sem}</p>
+                                </div>
                             </div>
-                        ))}
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+                            {availableSection?.map((section, index) => (
+                                <div key={index} className="bg-stone-50 rounded-lg group hover:shadow-xl transition-all duration-300 hover:-translate-y-1  border-0 shadow-md p-7">
+                                    <h1 className="font-bold text-lg mb-1"> {`${section.course} ${section.section}`} </h1>
+                                    <h2 className="font-semibold text-md text-gray-600 mb-1">  {`${section.level} ${section.sem}`}  </h2>
+                                    <h1 className="mb-2"> Enrolled {section.students.length} </h1>
+                                    <div className="flex gap-2">
+                                        <SectionDisplay section={section} />
+                                        <Button onClick={() => enrollStudent(section)} className=" bg-green-500 hover:bg-green-600 shadow" > Enroll </Button>
+                                    </div>
+                                    
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
+               
                 
             </div>
 
