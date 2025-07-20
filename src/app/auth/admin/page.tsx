@@ -28,6 +28,8 @@ export default function AdminLogin() {
       router.push("/pages/admin/home")
     } else if(formData.username == "registar" && formData.password == "123") {
       router.push("/pages/registar/home")
+    } else if(formData.username == "payment" && formData.password == "123") {
+      router.push("/pages/payment/home")
     } else {
         setIsLoading(false)
         errorAlert("invalid credentials")
