@@ -55,13 +55,13 @@ export function ProfSideBar({ className }: AppSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/" className="font-semibold">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Building2 className="size-4" />
+              <a href="/" className="font-semibold flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                  <img src={"/ncstLogo.png"} className="w-full h-full object-cover rounded-full" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">NCST</span>
-                  <span className="truncate text-xs text-sidebar-foreground/70">Admin</span>
+                <div className="grid text-left text-sm leading-tight">
+                  <span className="truncate font-bold">NCST</span>
+                  <span className="truncate text-xs text-sidebar-foreground/70">Instructor</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -77,7 +77,7 @@ export function ProfSideBar({ className }: AppSidebarProps) {
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link href={item.url} className="flex items-center gap-2">
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
                     </Link>
@@ -94,7 +94,7 @@ export function ProfSideBar({ className }: AppSidebarProps) {
           {accountItems.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <Link href={item.url}>
+                <Link href={item.url} className="flex items-center gap-2">
                   <item.icon className="size-4" />
                   <span>{item.title}</span>
                 </Link>

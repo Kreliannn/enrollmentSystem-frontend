@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Shield, BookOpen, Eye, EyeOff, ArrowLeft } from "lucide-react"
+import { Shield, BookOpen, Eye, EyeOff, ArrowLeft, UserCheck } from "lucide-react"
 import Link from "next/link"
 import { errorAlert, successAlert } from "@/app/utils/alert"
 import { useMutation } from "@tanstack/react-query"
@@ -56,15 +56,17 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
-      <header className="w-full py-6 px-4">
+    <div className="  h-screen bg-gradient-to-br w-full from-slate-50 to-slate-100 bg-cover bg-center"  style={{ backgroundImage: "url('/ncstbg1.png')" }}>
+      <div className="absolute inset-0 bg-black/60 z-0" />
+
+
+    <div className="relative z-10">
+    <header className="w-full py-6 px-4">
         <div className="container mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <BookOpen className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-slate-800">NCST    </span>
-          </Link>
-          <Link href="/" className="flex items-center space-x-2 text-slate-600 hover:text-slate-800 transition-colors">
+        <div className=" w-18 h-18 bg-red-500 top-3 left-5 rounded-full shadow-lg">
+          <img src={"/ncstLogo.png"} className="w-18 h-18 rounded-full" />
+        </div>
+          <Link href="/" className="flex items-center space-x-2 text-white hover:text-stone-200 transition-colors">
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Home</span>
           </Link>
@@ -77,8 +79,8 @@ export default function AdminLogin() {
           {/* Login Card */}
           <Card className="shadow-lg border-2">
             <CardHeader className="text-center pb-6">
-              <div className="mx-auto mb-4 p-4 bg-blue-100 rounded-full w-fit">
-                <Shield className="h-10 w-10 text-blue-600" />
+              <div className="mx-auto mb-4 p-4 bg-purple-100 rounded-full w-fit">
+                <UserCheck className="h-8 w-8 text-purple-600" />
               </div>
               <CardTitle className="text-2xl text-slate-800">Instructor Login</CardTitle>
               <CardDescription className="text-slate-600">
@@ -101,7 +103,7 @@ export default function AdminLogin() {
                     value={formData.username}
                     onChange={handleInputChange}
                     required
-                    className="h-11 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                    className="h-11 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
                   />
                 </div>
 
@@ -119,7 +121,7 @@ export default function AdminLogin() {
                       value={formData.password}
                       onChange={handleInputChange}
                       required
-                      className="h-11 pr-10 border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="h-11 pr-10 border-slate-300 focus:border-purple-500 focus:ring-purple-500"
                     />
                     <button
                       type="button"
@@ -136,7 +138,7 @@ export default function AdminLogin() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
+                  className="w-full h-11 bg-purple-600 hover:bg-purple-700 text-white font-medium transition-colors"
                 >
                   {isLoading ? (
                     <div className="flex items-center space-x-2">
@@ -157,6 +159,8 @@ export default function AdminLogin() {
         </div>
       </main>
 
+    </div>
+    
      
      
     </div>

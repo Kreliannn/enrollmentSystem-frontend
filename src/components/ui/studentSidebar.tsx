@@ -23,24 +23,28 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
+import {
+  FileText,
+  ClipboardCheck,
+} from "lucide-react";
+
 const navigationItems = [
   {
     title: "Dashboard",
     url: "/pages/student/home",
-    icon: Home,
+    icon: Home, // For overview/dashboard
   },
   {
     title: "Student Form",
     url: "/pages/student/form",
-    icon: BookOpen,
+    icon: FileText, // For filling out/viewing forms
   },
   {
     title: "Online Enrollment",
     url: "/pages/student/onlineEnroll",
-    icon: BookOpen,
+    icon: ClipboardCheck, // For enrollment or approval-type actions
   },
-
-]
+];
 
 const accountItems = [
   {
@@ -62,12 +66,12 @@ export function StudentSideBar({ className }: AppSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="/" className="font-semibold">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Building2 className="size-4" />
+                <div className=" w-10 h-10   rounded-full">
+                  <img src={"/ncstLogo.png"} className="w-10 h-10 rounded-full" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">NCST</span>
-                  <span className="truncate text-xs text-sidebar-foreground/70">Admin</span>
+                  <span className="truncate font-bold">NCST</span>
+                  <span className="truncate text-xs text-sidebar-foreground/70">Student</span>
                 </div>
               </a>
             </SidebarMenuButton>

@@ -1,4 +1,4 @@
-
+import { getSectionSubjectsInterface } from "../types/section.type";
 
 export  const convertGradeLevel = (index : number) => {
     switch(index)
@@ -30,4 +30,13 @@ export function hasDuplicates(arr : string[]) {
     return new Set(arr).size !== arr.length;
   }
  
+
+export const subjectAvailability = (subject : getSectionSubjectsInterface, subjectTaken : getSectionSubjectsInterface[], passed : string[], currentSubject : getSectionSubjectsInterface[]) => {
+  if(!passed.includes(subject.code) && !subjectTaken.map(sub => sub.code).includes(subject.code) && !currentSubject.map(sub => sub.code).includes(subject.code)){
+      if(subject.prerequisite == "none" || passed.includes(subject.prerequisite)){
+        return false
+      }
+  }
+  return true
+} 
   

@@ -12,7 +12,7 @@ import {
 import { useState } from "react"
 import { yearLevelInterface } from "@/app/types/courses.type"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import { getSectionInterface } from "@/app/types/section.type"
+import { getSectionInterface, sectionSubjectsInterface } from "@/app/types/section.type"
  
 
 export function SectionDisplay({ section } : { section  : getSectionInterface}) {
@@ -29,7 +29,7 @@ export function SectionDisplay({ section } : { section  : getSectionInterface}) 
                View
             </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[750px]">
+      <DialogContent className="sm:max-w-[880px]">
         <DialogHeader>
           <DialogTitle> {section.section} </DialogTitle>
           <DialogDescription>   
@@ -44,6 +44,7 @@ export function SectionDisplay({ section } : { section  : getSectionInterface}) 
               <TableRow>
                 <TableHead>Code</TableHead>
                 <TableHead>Subject</TableHead>
+                <TableHead>Prerequisite</TableHead>
                 <TableHead>Unit</TableHead>
                 <TableHead>Days</TableHead>
                 <TableHead>Start</TableHead>
@@ -59,6 +60,7 @@ export function SectionDisplay({ section } : { section  : getSectionInterface}) 
                   <TableRow key={index}>
                     <TableCell className="font-bold">{sub.code}</TableCell>
                     <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
+                    <TableCell className="">{sub.prerequisite}</TableCell>
                     <TableCell>{sub.units}</TableCell>
                     {/*DAYS*/}
                     <TableCell>

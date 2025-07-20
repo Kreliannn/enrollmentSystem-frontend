@@ -1,14 +1,6 @@
 "use client"
 import Link from "next/link"
-import {
-  Home,
-  BookOpen,
-  PlusCircle,
-  Layers3,
-  UserPlus2,
-  LogOut,
-  Building2,
-} from "lucide-react"
+
 import {
   Sidebar,
   SidebarContent,
@@ -23,23 +15,37 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
+import {
+  Home,
+  GraduationCap,
+  UserPlus2,
+  ClipboardList,
+  FolderPlus,
+  LogOut,
+} from "lucide-react";
+
 const navigationItems = [
   {
     title: "Dashboard",
     url: "/pages/registar/home",
-    icon: Home,
+    icon: Home, // Home dashboard
   },
   {
     title: "Create Student Account",
     url: "/pages/registar/createAccount",
-    icon: BookOpen,
+    icon: UserPlus2, // Add user
   },
   {
-    title: "Enroll Student Regular",
+    title: "Enroll Regular Student",
     url: "/pages/registar/enrollRegular",
-    icon: BookOpen,
+    icon: GraduationCap, // Academic-related
   },
-]
+  {
+    title: "Enroll Irregular Student ",
+    url: "/pages/registar/enrollIrreg",
+    icon: FolderPlus, // Folder for custom enrollments
+  },
+];
 
 const accountItems = [
   {
@@ -47,7 +53,8 @@ const accountItems = [
     url: "/",
     icon: LogOut,
   },
-]
+];
+
 
 interface AppSidebarProps {
   className?: string
@@ -60,13 +67,13 @@ export function RegistarSideBar({ className }: AppSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="/" className="font-semibold">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Building2 className="size-4" />
+              <a href="/" className="font-semibold flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                  <img src={"/ncstLogo.png"} className="w-full h-full object-cover rounded-full" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">NCST</span>
-                  <span className="truncate text-xs text-sidebar-foreground/70">Admin</span>
+                <div className="grid text-left text-sm leading-tight">
+                  <span className="truncate font-bold">NCST</span>
+                  <span className="truncate text-xs text-sidebar-foreground/70">Registar</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -82,7 +89,7 @@ export function RegistarSideBar({ className }: AppSidebarProps) {
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link href={item.url} className="flex items-center gap-2">
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
                     </Link>
@@ -99,7 +106,7 @@ export function RegistarSideBar({ className }: AppSidebarProps) {
           {accountItems.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <Link href={item.url}>
+                <Link href={item.url} className="flex items-center gap-2">
                   <item.icon className="size-4" />
                   <span>{item.title}</span>
                 </Link>
