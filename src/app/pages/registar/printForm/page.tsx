@@ -16,6 +16,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Plus } from "lucide-react"
 import { subjectAvailability } from "@/app/utils/customFunction"
 import { X , Printer} from "lucide-react"
+import { queueInterface } from "@/app/types/queue.type"
 
 
 interface dataType {
@@ -51,10 +52,25 @@ export default function Page(){
         onError : () => errorAlert("error occour")
     })
 
+    const mutationEnroll = useMutation({
+        mutationFn : (id : string) => axios.post(backendUrl("/student/forPayment"), { id }),
+        onSuccess : (response) => {
+            const queue : queueInterface = response.data
+          
+            successAlert(`you queue number is ${queue.number}`)
+        },
+        onError : () => errorAlert("error occour")
+    })
+
     const searchId = () => {
         if(!studentId.trim()) return errorAlert("provide student id")
         mutation.mutate(studentId)
         setIsLoading(true)
+    }
+
+    const enrollStudent = () => {
+        if(!student?._id) return
+        mutationEnroll.mutate(student._id)
     }
 
     const printForm = () => {
@@ -244,7 +260,7 @@ export default function Page(){
                         Print Form 
                     </Button>
 
-                    <Button className="bg-green-500 hover:bg-green-600 shadow" disabled={!isPrinted}> 
+                    <Button className="bg-green-500 hover:bg-green-600 shadow" disabled={!isPrinted} onClick={enrollStudent}> 
                         Enroll Student 
                     </Button>
                 </div>
