@@ -102,7 +102,7 @@ export default function Page(){
                                     <h2 className="font-semibold text-md text-gray-600 mb-1">  {`${section.level} ${section.sem}`}  </h2>
                                     <h1 className="mb-2" > Enrolled : {section.students.length} </h1>
                                     <div className="flex gap-2">
-                                        <SectionDisplay section={section} />
+                                        <SectionDisplay section={section} passed={student.passed} />
                                         <Button onClick={() => enrollStudent(section)} className=" bg-green-500 hover:bg-green-600 shadow" > Enroll </Button>
                                     </div>
                                     

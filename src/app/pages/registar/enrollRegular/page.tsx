@@ -31,7 +31,8 @@ export default function Page(){
         studentId : "",
         course : "",
         level : "",
-        sem : ""
+        sem : "",
+        passed : ["1"]
     })
 
     const [studentId, setStudenetId] = useState("")
@@ -43,14 +44,15 @@ export default function Page(){
             setIsLoading(false)
             if(!response.data) return errorAlert("student id does not exist")
             const studentData : getStudentInterface = response.data
-            if(studentData.section != "none") return errorAlert("student is already enrolled")
+            if(studentData.section != "none") return errorAlert("student is already has Section")
             if(studentData.subjects.length != 0) return errorAlert("student is irregular")
             setStudent({
                 name : studentData.name,
                 studentId : studentData.studentId,
                 course : studentData.course,
                 level : studentData.level,
-                sem : studentData.sem
+                sem : studentData.sem,
+                passed : studentData.passed
             })
             successAlert("student found")
             setAvailableSection(section.filter((item) => (item.course == studentData.course && item.sem == studentData.sem && item.level == studentData.level )))
@@ -68,8 +70,8 @@ export default function Page(){
             studentId : "",
             course : "",
             level : "",
-            sem : ""
-    
+            sem : "",
+            passed : []
         })
         setAvailableSection([])
         },
@@ -151,7 +153,7 @@ export default function Page(){
                                     <h2 className="font-semibold text-md text-gray-600 mb-1">  {`${section.level} ${section.sem}`}  </h2>
                                     <h1 className="mb-2" > Enrolled : {section.students.length} </h1>
                                     <div className="flex gap-2">
-                                        <SectionDisplay section={section} />
+                                        <SectionDisplay section={section} passed={student.passed} />
                                         <Button onClick={() => enrollStudent(section)} className=" bg-green-500 hover:bg-green-600 shadow" > Enroll </Button>
                                     </div>
                                     

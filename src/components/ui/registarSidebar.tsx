@@ -22,6 +22,7 @@ import {
   ClipboardList,
   FolderPlus,
   LogOut,
+  Printer
 } from "lucide-react";
 
 const navigationItems = [
@@ -44,6 +45,11 @@ const navigationItems = [
     title: "Enroll Irregular Student ",
     url: "/pages/registar/enrollIrreg",
     icon: FolderPlus, // Folder for custom enrollments
+  },
+  {
+    title: "Print Student Form",
+    url: "/pages/registar/printForm",
+    icon:   Printer
   },
 ];
 

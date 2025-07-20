@@ -19,9 +19,10 @@ export default function Page(){
                 </div>
             </div>
 
-            <div className="w-4/6 mt-10 m-auto">
+            <div className="w-4/6 mt-10 m-auto shadow-lg">
 
-                <div className="w-full shadow-lg mb-5 bg-stone-50 p-4 rounded-xl">
+
+                <div className="w-full   bg-stone-50 p-4 rounded-xl">
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-4 text-sm sm:text-base  ">
                         <div>
                         <p className="text-gray-500 font-medium text-xs">Student ID</p>
@@ -54,8 +55,8 @@ export default function Page(){
                     </div>
                 </div>
 
-                <div  className="bg-stone-50 shadow-lg p-2 rounded-lg">
-                    <Table>
+                <div  className="bg-stone-50  p-2 rounded-lg">
+                    <Table> 
                         <TableHeader>
                         <TableRow>
                             <TableHead>Code</TableHead>

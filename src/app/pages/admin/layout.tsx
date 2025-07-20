@@ -6,7 +6,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
     return (
       <div className="flex min-h-screen">
           <SidebarProvider>
-                <AdminSideBar />
+                <AdminSideBar  />
                 <main className="w-full">
                     {children}
                 </main>

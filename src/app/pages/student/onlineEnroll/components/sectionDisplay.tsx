@@ -15,7 +15,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { getSectionInterface, sectionSubjectsInterface } from "@/app/types/section.type"
  
 
-export function SectionDisplay({ section } : { section  : getSectionInterface}) {
+export function SectionDisplay({ section , passed } : { section  : getSectionInterface, passed : string[]}) {
 
   const [open, setOpen] = useState(false);
 
@@ -57,9 +57,9 @@ export function SectionDisplay({ section } : { section  : getSectionInterface}) 
             <TableBody>
               {section.subjects.map((sub, index) => {
                 return (
-                  <TableRow key={index}>
+                  <TableRow key={index} className={`${(!passed.includes(sub.prerequisite) && sub.prerequisite != "none") ? "bg-red-400 text-white hover:bg-red-400" : null }`}>
                     <TableCell className="font-bold">{sub.code}</TableCell>
-                    <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
+                    <TableCell className="max-w-[220px]  overflow-hidden">{sub.name}</TableCell>
                     <TableCell className="">{sub.prerequisite}</TableCell>
                     <TableCell>{sub.units}</TableCell>
                     {/*DAYS*/}

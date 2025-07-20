@@ -54,6 +54,8 @@ export default function Page(){
         subjects : []
     })
 
+  
+
     const [studentId, setStudenetId] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
@@ -64,8 +66,9 @@ export default function Page(){
         onSuccess : (response) => {
             setIsLoading(false)
             if(!response.data) return errorAlert("student id does not exist")
+            if(response.data.status == "enrolled") return errorAlert("student is already Enrolled")
             const studentData : getStudentInterface = response.data
-            if(studentData.section != "none") return errorAlert("student is already enrolled")
+           
             setStudent({
                 name : studentData.name,
                 studentId : studentData.studentId,
@@ -198,32 +201,34 @@ export default function Page(){
                                                 <TableHead>Days</TableHead>
                                                 <TableHead>Start</TableHead>
                                                 <TableHead>End</TableHead>
+                                                <TableHead>Remove</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
+                                            {student.subjects.map((sub, index) => {
+                                                return (
+                                                    <TableRow key={index}>
+                                                        <TableCell className="font-bold">{sub.code}</TableCell>
+                                                        <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
+                                                        <TableCell>{sub.section}</TableCell>
+                                                        <TableCell>{sub.days}</TableCell>
+                                                        <TableCell>{sub.start}</TableCell>
+                                                        <TableCell>{sub.end}</TableCell>
+                                                    </TableRow>
+                                                    
+                                                );
+                                            })}
+
                                             {subjects.map((sub, index) => {
                                                 return (
                                                     <TableRow key={index}>
                                                         <TableCell className="font-bold">{sub.code}</TableCell>
                                                         <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
                                                         <TableCell>{sub.section}</TableCell>
-                                                        {/*DAYS*/}
-                                                        <TableCell>
-                                                            {sub.days}
-                                                        </TableCell>
-                                                        {/*START*/}
-                                                        <TableCell>
-                                                            {sub.start}
-                                                        </TableCell>
-                                                        {/*END*/}
-                                                        <TableCell>
-                                                            {sub.end}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <Button size={"sm"} onClick={() => removeSubject(sub.code)}>
-                                                                <X />
-                                                            </Button>
-                                                        </TableCell>
+                                                        <TableCell>{sub.days}</TableCell>
+                                                        <TableCell>{sub.start}</TableCell>
+                                                        <TableCell>{sub.end}</TableCell>
+                                                        <TableCell><Button size={"sm"} onClick={() => removeSubject(sub.code)}><X /></Button></TableCell>
                                                     </TableRow>
                                                     
                                                 );
