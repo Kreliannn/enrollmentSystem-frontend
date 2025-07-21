@@ -56,8 +56,7 @@ export default function Page() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
             {/* Current Queue */}
             <div className="bg-white shadow-lg rounded-2xl p-6 flex flex-col justify-between h-[550px] relative">
-
-                <Button variant={"destructive"} className="absolute top-5 right-2">
+                <Button variant={"destructive"} className="absolute top-5 right-2" onClick={() => queueSubmit(queue[0]._id, "clear")}>
                     Reset
                 </Button>
 

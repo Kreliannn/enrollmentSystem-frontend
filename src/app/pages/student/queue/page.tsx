@@ -17,29 +17,38 @@ export default function Page() {
 
     const [queue, setQueue] = useState<getQueueInterface[]>([])
 
-    const [type, setType] = useState("")
+    const [isDisable, setIsDisabled] = useState(false)
+
+  
 
     const { data } = useQuery({
       queryKey : ["Queue"],
       queryFn : () => axios.get(backendUrl("/queue"))
     })
   
-    useEffect(() => { data?.data && setQueue(data.data) }, [data])
+    useEffect(() => { 
+        if(data?.data){
+            setQueue(data.data)
+            const studentIds : string[] = data.data.map((item : getQueueInterface) => item.student.studentId)
+            if(student?.studentId)setIsDisabled(studentIds.includes(student.studentId))
+        }
+    }, [data])
 
     const mutation = useMutation({
-        mutationFn : (data : { queueId : string }) => axios.post(backendUrl(`/queue/${type}`), data),
+        mutationFn : (data : { id : string }) => axios.post(backendUrl(`/student/requestQueue`), data),
         onSuccess : (response) => {
             setQueue(response.data)
-            successAlert("next queue number")
-            setType("")
+            successAlert("queue number created")
+            const studentIds : string[] = response.data.map((item : getQueueInterface) => item.student.studentId)
+            if(student?.studentId)setIsDisabled(studentIds.includes(student.studentId))
         },
         onError : () => errorAlert("error accccour")
     })
 
-    const queueSubmit = (queueId : string, type : string) => {
-        confirmAlert(`${type} Queue Number`, "next queue", () => {
-            setType(type)
-            mutation.mutate({queueId})
+    const requestQueue = () => {
+        confirmAlert(` request queue number`, "Request", () => {
+            if(!student?._id) return
+            mutation.mutate({id : student?._id})
         })
     }
 
@@ -60,7 +69,16 @@ export default function Page() {
 
             {/* Queue List */}
             <div className="bg-white shadow-lg rounded-2xl p-6 h-[550px] overflow-auto w-4/6 m-auto mt-10">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Waiting Queue</h3>
+            <div className="flex justify-between ">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Waiting Queue</h3>
+                <Button
+                    disabled={isDisable}
+                    onClick={requestQueue}
+                > 
+                    Request Number 
+                </Button>
+            </div>
+          
             <div className="space-y-2">
                 {queue.map((item, index) => (
                 <div
@@ -83,6 +101,14 @@ export default function Page() {
             </div>
         </div>
       )}
+
+    {queue.length == 0 && (
+        <div className="w-full h-[500px] flex items-center justify-center">
+            <h1 className="text-5xl font-bold text-gray-700">
+                No Pending Queue
+            </h1>
+        </div>
+    )}
      
     </div>
   )
