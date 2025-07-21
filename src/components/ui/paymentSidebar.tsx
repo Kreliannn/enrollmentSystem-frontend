@@ -33,22 +33,22 @@ import {
   const navigationItems = [
     {
       title: "Dashboard",
-      url: "/pages/admin/home",
+      url: "/pages/payment/home",
       icon: LayoutDashboard, // better for "Dashboard"
     },
     {
       title: "Queue",
-      url: "/pages/admin/queue",
+      url: "/pages/payment/queue",
       icon: ListOrdered, // represents a queue or ordered list
     },
     {
       title: "Payment",
-      url: "/pages/admin/payment",
+      url: "/pages/payment/tuitionPayment",
       icon: CreditCard, // clearly represents payment
     },
     {
       title: "Transaction",
-      url: "/pages/admin/transaction",
+      url: "/pages/payment/transaction",
       icon: FileBarChart2, // suitable for transaction records
     },
   ];

@@ -55,6 +55,7 @@ export default function Page() {
         setCourse("")
         setGender("")
         setCreditedSub([])
+        setPassword("")
     },
     onError : () => {
         errorAlert("error occour")
