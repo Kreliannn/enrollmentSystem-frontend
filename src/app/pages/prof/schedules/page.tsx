@@ -10,7 +10,7 @@ export default function Page(){
 
     const { prof } = useProfStore()
         
-    console.log(prof?.schedules)
+    console.log(prof)
 
     return(
         <div className="w-full h-full">

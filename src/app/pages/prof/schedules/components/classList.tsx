@@ -15,32 +15,9 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { sectionSubjectsInterface } from "@/app/types/section.type"
  import { Eye, TableCellsMerge } from "lucide-react"
  import { confirmAlert, successAlert } from "@/app/utils/alert"
+ import { profSubInterface } from "@/app/types/prof.type"
 
-
- const data = [
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
-    { studentId : "2025-0001", studentName : "krelianq uimson"},
- ]
-
-export function ClassList({ section } : { section : sectionSubjectsInterface }) {
+export function ClassList({ section } : { section : profSubInterface }) {
 
   const [open, setOpen] = useState(false);
 
@@ -79,12 +56,12 @@ export function ClassList({ section } : { section : sectionSubjectsInterface }) 
                   </TableRow>
               </TableHeader>
               <TableBody>
-                  {data.map((student, index) => (
+                  {section.students.map((student, index) => (
                       <TableRow key={index}>
                           <TableCell className="font-bold">{student.studentId}</TableCell>
-                          <TableCell className="max-w-[250px]  text-gray-500  overflow-hidden">{student.studentName}</TableCell>
+                          <TableCell className="max-w-[250px]  text-gray-500  overflow-hidden">{student.name}</TableCell>
                           <TableCell>
-                                <Button className="bg-red-500 hover:bg-red-600" onClick={() => failedHandler(student.studentName)}> Failed </Button>
+                                <Button className="bg-red-500 hover:bg-red-600" onClick={() => failedHandler(student.name)}> Failed </Button>
                           </TableCell>
                       </TableRow>
                   ))}

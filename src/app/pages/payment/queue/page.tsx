@@ -96,6 +96,11 @@ export default function Page() {
                 >
                     <p className="text-lg font-bold text-blue-700">#{item.number}</p>
                     {item.student ? (
+                    <p className="text-sm text-gray-600">{item.student.name}</p>
+                    ) : (
+                    <p className="text-sm text-red-500">No student</p>
+                    )}
+                    {item.student ? (
                     <p className="text-sm text-gray-600">{item.student.studentId}</p>
                     ) : (
                     <p className="text-sm text-red-500">No student</p>

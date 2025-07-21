@@ -22,9 +22,11 @@ export default function Page() {
   
 
     const { data } = useQuery({
-      queryKey : ["Queue"],
-      queryFn : () => axios.get(backendUrl("/queue"))
-    })
+        queryKey: ["Queue"],
+        queryFn: () => axios.get(backendUrl("/queue")),
+        refetchInterval: 5000, 
+      })
+      
   
     useEffect(() => { 
         if(data?.data){

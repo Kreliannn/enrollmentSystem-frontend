@@ -2,6 +2,7 @@
 import { useStudentStore } from "@/app/store/studentStore"
 import { User, BookOpen, CheckCircle, XCircle, Calendar, Users } from "lucide-react"
 import { DisplaySubCode } from "./components/displaySubjectCode"
+import { Wallet } from "lucide-react";
 
 export default function Page(){
     const { student } = useStudentStore()
@@ -16,7 +17,7 @@ export default function Page(){
 
     const getStatusColor = (status : string) => {
         switch(status) {
-            case "Enrolled": return "bg-green-100 text-green-800 border-green-200"
+            case "enrolled": return "bg-green-100 text-green-800 border-green-200"
             case "For Printing": return "bg-yellow-100 text-yellow-800 border-yellow-200"
             case "unEnrolled": return "bg-red-100 text-red-800 border-red-200"
             default: return "bg-gray-100 text-gray-800 border-gray-200"
@@ -106,6 +107,17 @@ export default function Page(){
                             </span>
                         </div>
                     </div>
+
+
+                    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 relative ">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-5xl font-bold text-red-600 mb-5">₱{student.balance}</p>
+                                <p className="text-lg text-gray-600">Balance </p>
+                            </div>
+                            <Wallet className="h-8 w-8 text-red-600" />
+                        </div>
+                    </div>
             
 
                     {/* Passed Subjects */}
@@ -122,17 +134,7 @@ export default function Page(){
                     </div>
 
                     {/* Failed Subjects */}
-                    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 relative hover:bg-stone-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-5xl font-bold text-red-600 mb-5">{totalFailed}</p>
-                                <p className="text-lg text-gray-600">Failed Subjects</p>
-                            </div>
-                            <XCircle className="h-8 w-8 text-red-600" />
-
-                            <DisplaySubCode  title={"failed"} description={"subject you failed"} sub={student?.failed}/>
-                        </div>
-                    </div>
+                  
                 </div>
 
                 {/* Current Subjects */}

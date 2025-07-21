@@ -19,7 +19,8 @@ export default function Page(){
 
     const { data } = useQuery({
       queryKey : ["sections"],
-      queryFn : () => axios.get(backendUrl("/section"))
+      queryFn : () => axios.get(backendUrl("/section")),
+      refetchInterval: 5000,
     })
   
     useEffect(() => { data?.data && setSection(data.data) }, [data])
