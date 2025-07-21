@@ -1,5 +1,5 @@
 "use client"
-
+import Swal from 'sweetalert2'
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Plus } from "lucide-react"
 import { subjectAvailability } from "@/app/utils/customFunction"
 import { X , Printer} from "lucide-react"
-import { queueInterface } from "@/app/types/queue.type"
+import { getQueueInterface, queueInterface } from "@/app/types/queue.type"
 
 
 interface dataType {
@@ -48,16 +48,19 @@ export default function Page(){
             const studentData : getStudentInterface = response.data
             setStudent(response.data)
             successAlert("student found")
-        },
-        onError : () => errorAlert("error occour")
-    })
+
+            },
+            onError : () => errorAlert("error occour")
+        })
 
     const mutationEnroll = useMutation({
         mutationFn : (id : string) => axios.post(backendUrl("/student/forPayment"), { id }),
         onSuccess : (response) => {
-            const queue : queueInterface = response.data
-          
-            successAlert(`you queue number is ${queue.number}`)
+            const queue : getQueueInterface = response.data
+            Swal.fire( `${student?.studentId} queue number is ${queue.number}`, 'Queue Number Generated', 'success')
+            setStudent(null)
+            setStudenetId("")
+            setIsPrinted(false)
         },
         onError : () => errorAlert("error occour")
     })

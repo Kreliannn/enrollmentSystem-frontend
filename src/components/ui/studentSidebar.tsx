@@ -8,6 +8,7 @@ import {
   UserPlus2,
   LogOut,
   Building2,
+  ListOrdered
 } from "lucide-react"
 import {
   Sidebar,
@@ -43,6 +44,11 @@ const navigationItems = [
     title: "Online Enrollment",
     url: "/pages/student/onlineEnroll",
     icon: ClipboardCheck, // For enrollment or approval-type actions
+  },
+  {
+    title: "Queue",
+    url: "/pages/student/queue",
+    icon: ListOrdered, // represents a queue or ordered list
   },
 ];
 
