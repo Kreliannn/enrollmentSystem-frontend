@@ -33,6 +33,11 @@ export default function Page(){
 
     const [student, setStudent] = useState<getStudentInterface | null>(null)
 
+    const totalUnits = student?.subjects
+    .map((sub) => sub.units)
+    .reduce((sum, units) => sum + units, 0);
+  
+
     const [studentId, setStudenetId] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
@@ -175,7 +180,7 @@ export default function Page(){
             </div>
 
             {/* print  this */}
-            { student && (
+            { (student && totalUnits) && (
                 <div className="printable-area">
                     {/* Print Header - only visible when printing */}
                     <div className="print-header hidden print:block">
@@ -186,7 +191,7 @@ export default function Page(){
                     <div className="w-4/6 mt-10 m-auto shadow-lg print:w-full print:shadow-none">
 
                         <div className="w-full bg-stone-50 p-4 rounded-xl student-info print:rounded-none">
-                            <div className="grid grid-cols-7 sm:grid-cols-7 md:grid-cols-7 gap-4 text-sm sm:text-base">
+                            <div className="grid grid-cols-7 sm:grid-cols-7 md:grid-cols-8 gap-4 text-sm sm:text-base">
                                 <div>
                                 <p className="text-gray-500 font-medium text-xs">Student ID</p>
                                 <p className="font-semibold text-gray-800 text-sm">{student?.studentId}</p>
@@ -215,10 +220,11 @@ export default function Page(){
                                 <p className="text-gray-500 font-medium text-xs">Section</p>
                                 <p className="font-semibold text-gray-800 text-sm">{student?.section}</p>
                                 </div>
+                            
                             </div>
                         </div>
 
-                        <div className="bg-stone-50 shadow-lg p-2 rounded-lg">
+                        <div className="bg-stone-50 shadow-lg ">
                             <Table>
                                 <TableHeader>
                                 <TableRow>
@@ -252,6 +258,24 @@ export default function Page(){
                                 </TableBody>
                             </Table>
                         </div>
+
+
+                        <div className="w-full bg-stone-50 p-4  student-info print:rounded-none">
+                            <div className="flex justify-between text-sm sm:text-base">
+                                <div className='flex gap-1'>
+                                <p className="text-gray-500 font-medium text-xs">Total Units:</p>
+                                <p className="font-semibold text-gray-800 text-xs">{totalUnits}</p>
+                                </div>
+                               
+                                <div className='flex gap-1'>
+                                <p className="text-gray-500 font-medium text-xs">Tuition:</p>
+                                <p className="font-semibold text-gray-800 text-xs">₱{totalUnits * 1000}</p>
+                                </div>
+                            
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             ) }

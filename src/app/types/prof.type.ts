@@ -1,6 +1,7 @@
 import { getStudentInterface } from "./student.type"
 
 export interface profSubInterface  {
+    _id : string,
     course : string,
     name : string,
     code : string,

@@ -9,6 +9,11 @@ export default function Page(){
 
     if(student?.subjects.length == 0) return <NotEnrolled />
 
+    const totalUnits = student?.subjects
+    .map((sub) => sub.units)
+    .reduce((sum, units) => sum + units, 0);
+  
+
     return(
         <div className="w-full h-full">
            
@@ -23,7 +28,7 @@ export default function Page(){
 
 
                 <div className="w-full   bg-stone-50 p-4 rounded-xl">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-4 text-sm sm:text-base  ">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 gap-4 text-sm sm:text-base  ">
                         <div>
                         <p className="text-gray-500 font-medium text-xs">Student ID</p>
                         <p className="font-semibold text-gray-800 text-sm">{student?.studentId}</p>
@@ -51,6 +56,10 @@ export default function Page(){
                         <div>
                         <p className="text-gray-500 font-medium text-xs">Section</p>
                         <p className="font-semibold text-gray-800 text-sm">{student?.section}</p>
+                        </div>
+                        <div>
+                        <p className="text-gray-500 font-medium text-xs">Units</p>
+                        <p className="font-semibold text-gray-800 text-sm">{totalUnits}</p>
                         </div>
                     </div>
                 </div>

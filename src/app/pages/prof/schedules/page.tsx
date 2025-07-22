@@ -50,7 +50,7 @@ export default function Page(){
                                     <TableCell>{sub.end}</TableCell>
                                     <TableCell>{sub.room}</TableCell>
                                     <TableCell className="text-end">
-                                        <ClassList section={sub} />
+                                        <ClassList subject={sub} />
                                     </TableCell>
                                 </TableRow>
                             ))}

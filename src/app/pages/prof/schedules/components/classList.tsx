@@ -14,17 +14,34 @@ import { yearLevelInterface } from "@/app/types/courses.type"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { sectionSubjectsInterface } from "@/app/types/section.type"
  import { Eye, TableCellsMerge } from "lucide-react"
- import { confirmAlert, successAlert } from "@/app/utils/alert"
+ import { confirmAlert, successAlert , errorAlert} from "@/app/utils/alert"
  import { profSubInterface } from "@/app/types/prof.type"
+ import axios from "axios"
+ import { backendUrl } from "@/app/utils/url"
+ import { useMutation } from "@tanstack/react-query"
+ import { useProfStore } from "@/app/store/profStore"
 
-export function ClassList({ section } : { section : profSubInterface }) {
+
+export function ClassList({ subject } : { subject : profSubInterface }) {
 
   const [open, setOpen] = useState(false);
 
-  const failedHandler = (name : string) => {
+  const {setProf, prof} = useProfStore()
+
+  const mutation = useMutation({
+    mutationFn : (data : { prof_id : string, student_id : string, subject_id  :string}) => axios.post(backendUrl("/prof/failedStudent"), data),
+    onSuccess : (response) => {
+      setProf(response.data)
+      successAlert("student failed")
+    },
+    onError : () => errorAlert("ERROR ACCOUR")
+  })
+
+  const failedHandler = (student_id : string) => {
     setOpen(false)
-    confirmAlert(`are you sure ${name} is failed on subject ${section.name}?`, "failed", () => {
-        successAlert("falied")
+    confirmAlert(`are you sure ${name} is failed on subject ${subject.name}?`, "failed", () => {
+        if(!prof || !prof?._id) return
+        mutation.mutate({ prof_id : prof?._id, student_id : student_id, subject_id  : subject._id})
     })
   }
 
@@ -38,7 +55,7 @@ export function ClassList({ section } : { section : profSubInterface }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle> {section.course} {section.section} </DialogTitle>
+          <DialogTitle> {subject.course} {subject.section} </DialogTitle>
           <DialogDescription>   
             Class List
           </DialogDescription>
@@ -56,12 +73,12 @@ export function ClassList({ section } : { section : profSubInterface }) {
                   </TableRow>
               </TableHeader>
               <TableBody>
-                  {section.students.map((student, index) => (
+                  {subject.students.map((student, index) => (
                       <TableRow key={index}>
                           <TableCell className="font-bold">{student.studentId}</TableCell>
                           <TableCell className="max-w-[250px]  text-gray-500  overflow-hidden">{student.name}</TableCell>
                           <TableCell>
-                                <Button className="bg-red-500 hover:bg-red-600" onClick={() => failedHandler(student.name)}> Failed </Button>
+                                <Button className="bg-red-500 hover:bg-red-600" onClick={() => failedHandler(student._id)}> Failed </Button>
                           </TableCell>
                       </TableRow>
                   ))}
