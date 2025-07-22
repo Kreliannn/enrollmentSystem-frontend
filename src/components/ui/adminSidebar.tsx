@@ -54,6 +54,11 @@ const navigationItems = [
     url: "/pages/admin/addProf",
     icon: UserPlus2,
   },
+  {
+    title: "End Sem",
+    url: "/pages/admin/endSem",
+    icon: UserPlus2,
+  },
 ]
 
 const accountItems = [
