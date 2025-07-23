@@ -12,6 +12,7 @@ import { getSectionInterface } from "@/app/types/section.type"
 import { getStudentInterface } from "@/app/types/student.type"
 import { confirmAlert } from "@/app/utils/alert"
 import { SectionDisplay } from "./components/sectionDisplay"
+import BalanceDisplay from "./components/balanceDisplay"
 
 export default function Page(){
 
@@ -56,7 +57,9 @@ export default function Page(){
         })
     }
 
-    if(student?.subjects.length != 0) return <Enrolled />
+    if(student?.subjects.length != 0) return <Enrolled text="you're already Enrolled" />
+    if(student?.status == "graduate") return <Enrolled text="you're already Graduate" />
+    if(student?.balance != 0) return <BalanceDisplay />
 
     return(
         <div className="w-full h-full">
@@ -104,7 +107,7 @@ export default function Page(){
                                     <h1 className="mb-2" > Enrolled : {section.students.length} </h1>
                                     <div className="flex gap-2">
                                         <SectionDisplay section={section} passed={student.passed} />
-                                        <Button onClick={() => enrollStudent(section)} className=" bg-green-500 hover:bg-green-600 shadow" > Enroll </Button>
+                                        <Button onClick={() => enrollStudent(section)} className=" bg-green-500 hover:bg-green-600 shadow" disabled={section.students.length >= 3} > Enroll </Button>
                                     </div>
                                     
                                 </div>

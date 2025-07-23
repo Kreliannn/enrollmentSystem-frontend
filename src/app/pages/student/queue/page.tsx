@@ -104,13 +104,7 @@ export default function Page() {
         </div>
       )}
 
-    {queue.length == 0 && (
-        <div className="w-full h-[500px] flex items-center justify-center">
-            <h1 className="text-5xl font-bold text-gray-700">
-                No Pending Queue
-            </h1>
-        </div>
-    )}
+      
      
     </div>
   )

@@ -168,11 +168,7 @@ export default function Page(){
 
                 <div className="flex gap-5">
 
-                    <div className="w-[25%]">
-                        <Label className="text-stone-500" > Section Name </Label>
-                        <hr className="mb-1" />
-                        <Input type="text" placeholder="ex : 21A1, 11M2, 22E1" value={section} onChange={(e) => setSection(e.target.value)}  /> 
-                    </div>
+                  
 
                     <div className="w-[50%]">
                         <Label className="text-stone-500" > Course </Label>
@@ -189,10 +185,16 @@ export default function Page(){
                         </Select>
                     </div>
 
+                    <div className="w-[25%]">
+                        <Label className="text-stone-500" > Section Name </Label>
+                        <hr className="mb-1" />
+                        <Input type="text" placeholder="ex : 21A1, 11M2, 22E1" value={section} onChange={(e) => setSection(e.target.value)} disabled={gradeLevel.length == 0} /> 
+                    </div>
+
                     <div  className="w-[25%]">
                         <Label className="text-stone-500" > Grade Level and Sem </Label>
                         <hr className="mb-1" />
-                        <Select onValueChange={selectGradeLevel} value={gradeLevelSelect} disabled={gradeLevel.length == 0}>
+                        <Select onValueChange={selectGradeLevel} value={gradeLevelSelect} disabled={gradeLevel.length == 0 || !section}>
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select Grade Level" />
                             </SelectTrigger>

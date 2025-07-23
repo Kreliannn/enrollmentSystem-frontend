@@ -46,7 +46,9 @@ export default function Page(){
             if(!response.data) return errorAlert("student id does not exist")
             const studentData : getStudentInterface = response.data
             if(studentData.section != "none") return errorAlert("student is already has Section")
+            if(studentData.status == "graduate") return errorAlert("student is graduate")
             if(studentData.subjects.length != 0) return errorAlert("student is irregular")
+            if(studentData.balance != 0) return errorAlert("student has balance")
             setStudent({
                 name : studentData.name,
                 studentId : studentData.studentId,
@@ -56,6 +58,7 @@ export default function Page(){
                 passed : studentData.passed
             })
             successAlert("student found")
+            console.log(section.filter((item) => (item.course == studentData.course && item.sem == studentData.sem && item.level == studentData.level )))
             setAvailableSection(section.filter((item) => (item.course == studentData.course && item.sem == studentData.sem && item.level == studentData.level )))
         },
         onError : () => errorAlert("error occour")
@@ -155,7 +158,7 @@ export default function Page(){
                                     <h1 className="mb-2" > Enrolled : {section.students.length} </h1>
                                     <div className="flex gap-2">
                                         <SectionDisplay section={section} passed={student.passed} />
-                                        <Button onClick={() => enrollStudent(section)} className=" bg-green-500 hover:bg-green-600 shadow" > Enroll </Button>
+                                        <Button onClick={() => enrollStudent(section)} className=" bg-green-500 hover:bg-green-600 shadow" disabled={section.students.length >= 3}> Enroll </Button>
                                     </div>
                                     
                                 </div>

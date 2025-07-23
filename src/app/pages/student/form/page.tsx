@@ -7,11 +7,16 @@ export default function Page(){
 
     const { student } = useStudentStore()
 
-    if(student?.subjects.length == 0) return <NotEnrolled />
-
     const totalUnits = student?.subjects
     .map((sub) => sub.units)
     .reduce((sum, units) => sum + units, 0);
+
+    if(student?.subjects.length == 0 || !totalUnits) return <NotEnrolled />
+
+
+
+   
+   
   
 
     return(
@@ -62,6 +67,9 @@ export default function Page(){
                         <p className="font-semibold text-gray-800 text-sm">{totalUnits}</p>
                         </div>
                     </div>
+
+
+
                 </div>
 
                 <div  className="bg-stone-50  p-2 rounded-lg">
@@ -116,6 +124,23 @@ export default function Page(){
                     </Table>
 
                 </div>
+
+
+                
+                <div className="w-full bg-stone-50 p-4  student-info print:rounded-none">
+                            <div className="flex justify-between text-sm sm:text-base">
+                                <div className='flex gap-1'>
+                                <p className="text-gray-500 font-medium text-xs">Total Units:</p>
+                                <p className="font-semibold text-gray-800 text-xs">{totalUnits}</p>
+                                </div>
+                               
+                                <div className='flex gap-1'>
+                                <p className="text-gray-500 font-medium text-xs">Tuition:</p>
+                                <p className="font-semibold text-gray-800 text-xs">₱{(totalUnits * 1000).toLocaleString()}</p>
+                                </div>
+                            
+                        </div>
+                    </div>
              
             </div>
         </div>

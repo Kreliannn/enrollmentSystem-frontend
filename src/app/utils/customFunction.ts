@@ -33,7 +33,7 @@ export function hasDuplicates(arr : string[]) {
 
 export const subjectAvailability = (subject : getSectionSubjectsInterface, subjectTaken : getSectionSubjectsInterface[], passed : string[], currentSubject : getSectionSubjectsInterface[]) => {
   
-  if((subjectTaken.length + currentSubject.length) >= 10) return true
+  if((subjectTaken.length + currentSubject.length) >= 5) return true
   
   if(!passed.includes(subject.code) && !subjectTaken.map(sub => sub.code).includes(subject.code) && !currentSubject.map(sub => sub.code).includes(subject.code)){
       if(subject.prerequisite == "none" || passed.includes(subject.prerequisite)){

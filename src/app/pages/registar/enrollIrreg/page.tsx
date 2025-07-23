@@ -16,6 +16,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Plus } from "lucide-react"
 import { subjectAvailability } from "@/app/utils/customFunction"
 import { X } from "lucide-react"
+import { DisplaySubCode } from "./components/passedSub"
 
 interface dataType {
     name :string,
@@ -66,7 +67,9 @@ export default function Page(){
         onSuccess : (response) => {
             setIsLoading(false)
             if(!response.data) return errorAlert("student id does not exist")
+            if(response.data.status == "graduate") return errorAlert("student is graduate")
             if(response.data.status == "enrolled") return errorAlert("student is already Enrolled")
+            if(response.data.balance != 0) return errorAlert("student has balance")
             const studentData : getStudentInterface = response.data
            
             setStudent({
@@ -168,7 +171,7 @@ export default function Page(){
 
 
                         <div className="p-5  rounded-lg ms-5 " >
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-sm sm:text-base bg-stone-50 p-2 shadow-lg rounded-lg">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-sm sm:text-base bg-stone-50 p-2 shadow-lg rounded-lg">
                                     <div>
                                     <p className="text-gray-500 font-medium text-xs">Student ID</p>
                                     <p className="font-semibold text-gray-800 text-sm">{student.studentId}</p>
@@ -189,6 +192,13 @@ export default function Page(){
                                     <p className="text-gray-500 font-medium text-xs">Semester</p>
                                     <p className="font-semibold text-gray-800 text-sm">{student.sem}</p>
                                     </div>
+                                    <div>
+                                    <p className="text-gray-500 font-medium text-xs mb-1">Passed</p>
+                                    <DisplaySubCode  sub={student.passed}/>
+                                    </div>
+
+
+                                  
                                 </div>
 
                                 <div className="gap-6 mt-5 h-[370px] bg-stone-50 shadow-lg p-2 rounded-lg overflow-auto relative">
@@ -288,7 +298,7 @@ export default function Page(){
                                                     return (
                                                     <TableRow key={index}>
                                                         <TableCell className="font-bold">{sub.code}</TableCell>
-                                                        <TableCell className="max-w-[220px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
+                                                        <TableCell className="max-w-[100px] text-gray-500 overflow-hidden">{sub.name}</TableCell>
                                                         <TableCell>{sub.prerequisite}</TableCell>
                                                         {/*DAYS*/}
                                                         <TableCell>

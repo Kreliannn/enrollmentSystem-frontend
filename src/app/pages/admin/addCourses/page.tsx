@@ -43,7 +43,6 @@ export default function Page(){
         const newGradeLevel = {
             level: convertGradeLevel(course.year.length + 1)[0],
             sem : convertGradeLevel(course.year.length + 1)[1],
-            tuition : 0,
             subjects: []
         }
         setCourse(prev => ({
@@ -139,7 +138,6 @@ export default function Page(){
 
         
         finalCourse.year.forEach((item, index) => {
-            if(item.tuition <= 0) validation = {isError : true, message : `tuition is 0 or negative  in ${convertGradeLevel(index + 1)}`}
             if(item.subjects.length == 0) validation = {isError : true, message : `no subject found in ${convertGradeLevel(index + 1)}`}
             item.subjects.forEach((sub, subIndex) => {
                 if(!sub.name.trim()) validation = {isError : true, message : `${convertGradeLevel(index + 1)} subjects name is empty`}
@@ -244,19 +242,7 @@ export default function Page(){
                                     </label>
                                  
 
-                                    <div className="mt-2 mb-1"> 
-                                        <label className="block text-lg font-medium text-gray-600 mb-1">
-                                            Tuition Fee
-                                        </label>
-                                        <Input
-                                            type="number"
-                                            value={gradeLevel.tuition}
-                                            onChange={(e) => updateGradeLevel(gradeIndex, Number(e.target.value))}
-                                            className="w-full px-2 py-1 "
-                                            placeholder="Un Tuition Feeits"
-                                            min="0"
-                                        />
-                                    </div>
+                                   
                                     
                                 </div>
                                 <Button variant="destructive" size="icon" className="hover:bg-red-700"  onClick={() => removeGradeLevel(gradeIndex)} hidden={gradeIndex != course.year.length - 1 } >

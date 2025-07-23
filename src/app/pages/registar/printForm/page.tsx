@@ -269,7 +269,7 @@ export default function Page(){
                                
                                 <div className='flex gap-1'>
                                 <p className="text-gray-500 font-medium text-xs">Tuition:</p>
-                                <p className="font-semibold text-gray-800 text-xs">₱{totalUnits * 1000}</p>
+                                <p className="font-semibold text-gray-800 text-xs">₱{(totalUnits * 1000).toLocaleString()}</p>
                                 </div>
                             
                             </div>
