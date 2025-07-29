@@ -19,7 +19,7 @@ export function SectionDisplay({ section } : { section  : getSectionInterface}) 
 
   const [open, setOpen] = useState(false);
 
-  console.log(section.subjects)
+  
     
   return (
     <Dialog open={open} onOpenChange={setOpen}>

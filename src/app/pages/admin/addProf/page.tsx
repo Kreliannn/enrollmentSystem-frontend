@@ -48,8 +48,8 @@ export default function Page() {
         successAlert("Prof Added")
         setProf(response.data)
     },
-    onError : () => {
-        errorAlert("Email Already Taken")
+    onError : (err : { response : { data : string}}) => {
+        errorAlert(err.response.data)
     }
   })
 

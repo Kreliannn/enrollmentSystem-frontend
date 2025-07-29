@@ -1,9 +1,9 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { courseInterface } from "@/app/types/courses.type"
 import { convertGradeLevel , hasDuplicates} from "@/app/utils/customFunction"
 import { errorAlert, successAlert } from "@/app/utils/alert"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { backendUrl } from "@/app/utils/url"
 import { X } from "lucide-react"
@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Plus } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { getSectionInterface } from "@/app/types/section.type"
+import { getCoursesInterface } from "@/app/types/courses.type"
 
 export default function Page(){
     const [course, setCourse] = useState<courseInterface>({
@@ -22,7 +24,23 @@ export default function Page(){
     const [courseName, setCourseName] = useState("")
     const [courseCode, setCourseCode] = useState("")
 
-   
+    const [courses, setcourses] = useState<string[]>([])
+
+    const { data } = useQuery({
+        queryKey : ["courses"],
+        queryFn : () => axios.get(backendUrl("/course"))
+      })
+  
+      useEffect(() => { 
+          if(data?.data){
+              setcourses([...new Set(data.data.map((course : getCoursesInterface ) => course.code))] as string[]) ;
+          } 
+      }, [data])
+
+
+  
+
+  
 
     const mutation = useMutation({
         mutationFn : (data : courseInterface) => axios.post(backendUrl("/course"), data),
@@ -33,11 +51,17 @@ export default function Page(){
                 code : "",
                 year: []
             })
+            setcourses(prev => [...prev, courseCode])
             setCourseName("")
             setCourseCode("")
+          
         },
-        onError : () => errorAlert("error occur")
+        onError : (err : { response : { data : string}}) => {
+            errorAlert(err.response.data)
+        }
     })
+
+    console.log(courses)
 
     const addGradeLevel = () => {
         const newGradeLevel = {
@@ -127,6 +151,7 @@ export default function Page(){
 
         
         if(!courseName.trim() || !courseCode.trim()) return errorAlert("course name or code is empty")
+        if( courses.includes(courseCode.trim())) return errorAlert("course is already exist")
         if(course.year.length == 0) return errorAlert("grade level is empty")
 
         const subCode : string[] = []
@@ -135,7 +160,6 @@ export default function Page(){
             isError : false,
             message : ""
         }
-
         
         finalCourse.year.forEach((item, index) => {
             if(item.subjects.length == 0) validation = {isError : true, message : `no subject found in ${convertGradeLevel(index + 1)}`}

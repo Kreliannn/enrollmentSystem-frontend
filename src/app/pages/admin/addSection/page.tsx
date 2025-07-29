@@ -66,8 +66,8 @@ export default function Page(){
             setSubjectData([])
             successAlert("Section Added")
         },
-        onError : () => {
-            errorAlert("error occur")
+        onError : (err : { response : { data : string}}) => {
+            errorAlert(err.response.data)
         }
     })
  
