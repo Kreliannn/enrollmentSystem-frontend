@@ -27,9 +27,11 @@ export default function AdminLogin() {
     if(formData.username == "admin" && formData.password == "123"){
       router.push("/pages/admin/home")
     } else if(formData.username == "registar" && formData.password == "123") {
-      router.push("/pages/registar/home")
+      router.push("/pages/registar/enrollRegular")
     } else if(formData.username == "payment" && formData.password == "123") {
-      router.push("/pages/payment/home")
+      router.push("/pages/payment/queue")
+    } else if(formData.username == "admission" && formData.password == "123") {
+      router.push("/pages/admission/createAccount")
     } else {
         setIsLoading(false)
         errorAlert("invalid credentials")
