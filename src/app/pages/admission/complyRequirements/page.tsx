@@ -16,51 +16,43 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Plus } from "lucide-react"
 import { subjectAvailability } from "@/app/utils/customFunction"
 import { X } from "lucide-react"
+import { CompleteReqForm } from "./components/completeReq"
+import { NotCompleteReqForm } from "./components/notCompeteReq"
 
+
+const requirementList = [
+    "Form 138",
+    "Good Moral",
+    "2x2 Picture",
+    "PSA",
+    "SHS Diploma",
+  ];
 
 interface dataType {
+    _id :string,
     name :string,
     studentId :string,
     course :string,
     level :string,
     sem :string,
     passed : string[],
-    subjects : getSectionSubjectsInterface[]
+    subjects : getSectionSubjectsInterface[],
+    requirements : string[]
 }
 
 export default function Page(){
 
+    const [requirements, setRequirements] = useState<string[]>([])
 
-    const [section, setSection] = useState<getSectionInterface[]>([])
 
-    const { data } = useQuery({
-      queryKey : ["sections"],
-      queryFn : () => axios.get(backendUrl("/section"))
-    })
-  
-    useEffect(() => { data?.data && setSection(data.data) }, [data])
-
-    const [availableSection, setAvailableSection] = useState<getSectionInterface[]>([])
-    const [viewSection, setViewSection] = useState<getSectionInterface[]>([])
-
-    const [subjects, setSubjects] = useState<getSectionSubjectsInterface[]>([])
-
-    const [student, setStudent] = useState<dataType>({
-        name : "",
-        studentId : "",
-        course : "",
-        level : "",
-        sem : "",
-        passed : [],
-        subjects : []
-    })
-
-  
+    const [student, setStudent] = useState<getStudentInterface | null>(null)
 
     const [studentId, setStudenetId] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
-    const [sectionYear, setSectionYear] = useState("1st year")
+
+    const [isPrinting, setIsPrinting] = useState(false)
+
 
     const mutation = useMutation({
         mutationFn : (id : string) => axios.post(backendUrl("/student/studentId"), { id }),
@@ -69,44 +61,27 @@ export default function Page(){
             if(!response.data) return errorAlert("student id does not exist")
             if(response.data.status == "graduate") return errorAlert("student is graduate")
             if(response.data.status == "enrolled") return errorAlert("student is already Enrolled")
-            if(response.data.status == "unComplete") return errorAlert("student has pending requirements")
+            if(response.data.status == "unEnrolled") return errorAlert("student has Complete requirements")
             if(response.data.balance != 0) return errorAlert("student has balance")
             const studentData : getStudentInterface = response.data
            
-            setStudent({
-                name : studentData.name,
-                studentId : studentData.studentId,
-                course : studentData.course,
-                level : studentData.level,
-                sem : studentData.sem,
-                passed : studentData.passed,
-                subjects : studentData.subjects
-            })
+            setStudent(studentData)
+
+            setRequirements(studentData.requirements)
             successAlert("student found")
-            setAvailableSection(section.filter((item) => (item.course == studentData.course)))
-            setViewSection(section.filter((item) => (item.course == studentData.course && item.level == sectionYear)))
+
         },
         onError : () => errorAlert("error occour")
     })
 
-    const enrollStudentMutation = useMutation({
-        mutationFn : (data : { studentId : string, subjects : getSectionSubjectsInterface[]}) => axios.post(backendUrl("/student/irregEnroll"), data),
+    const complyMutation = useMutation({
+        mutationFn : (data : { id : string, requirements : string[]}) => axios.post(backendUrl("/student/comply"), data),
         onSuccess : (response) => {
-          successAlert("Subject Added")
+          successAlert("requirementsa added")
           setStudenetId("")
-          setStudent({
-            name : "",
-            studentId : "",
-            course : "",
-            level : "",
-            sem : "",
-            passed : [],
-            subjects : []
-        })
-        setViewSection([])
-        setAvailableSection([])
-        setSubjects([])
-        setSectionYear("1st year")
+          
+          
+          setIsPrinting(true)
         },
         onError : () => errorAlert("error occour")
     })
@@ -117,84 +92,111 @@ export default function Page(){
         setIsLoading(true)
     }
 
-    const enrollStudent = () => {
-        confirmAlert(`are you sure?`, "enroll", () => {
-            enrollStudentMutation.mutate({ studentId : student.studentId, subjects : subjects})
+    const addRequirements = () => {
+        confirmAlert(`want to add student requirments?`, "add", () => {
+            complyMutation.mutate({ id : student?._id!, requirements : requirements})
         })
     }
 
-  
+   
+
+    return (
+        <div className="w-full min-h-screen bg-gray-50">
 
 
-    return(
-        <div className="w-full h-full">
-
-            <div className="w-full h-32 bg-white shadow-sm border-b flex items-center justify-center">
-                <div className="text-center">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-2"> Enroll Irregular Student </h1>
-                    <p className="text-gray-600">lre asdas da sd asd</p>
-                </div>  
+          {(isPrinting && student) &&
+            (
+              (requirementList.length == requirements.length) ? <CompleteReqForm student={student}   setStudent={setStudent} setIsPrinting={setIsPrinting } /> : <NotCompleteReqForm requirements={requirements}  student={student}  setStudent={setStudent}  setIsPrinting={setIsPrinting }/> 
+            )
+          }
+      
+          {/* Header */}
+          <div className="w-full h-32 bg-white shadow-sm border-b flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-gray-800 mb-1">Comply Requirements</h1>
+              <p className="text-gray-600 text-sm">lre asdas da sd asd</p>
             </div>
+          </div>
+      
+          {/* Search Section */}
+          <div className="flex justify-center mt-10">
+            <div className="w-full max-w-md flex gap-2">
+              <Input
+                value={studentId}
+                onChange={(e) => setStudenetId(e.target.value)}
+                placeholder="Student ID"
+              />
+              <Button disabled={isLoading} onClick={searchId}>
+                Search
+              </Button>
+            </div>
+          </div>
+      
+          {/* Student Info & Requirements */}
+          {student && (
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-10 px-6 pb-10">
+              
+          
+          
+      
+              {/* Requirements */}
+              <div className="bg-white p-5 rounded-lg shadow-md border w-4/6 m-auto">
 
-            <div>
+              <div className="bg-white p-5 rounded-lg shadow-md border mb-10">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-500 font-medium text-xs">Student ID</p>
+                    <p className="font-semibold text-gray-800 text-sm">{student.studentId}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 font-medium text-xs">Name</p>
+                    <p className="font-semibold text-gray-800 text-sm">{student.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 font-medium text-xs">Course</p>
+                    <p className="font-semibold text-gray-800 text-sm">{student.course}</p>
+                  </div>
+                </div>
+              </div>
 
-                <div className="m-auto  w-2/6 mt-10">
-                    <div className="m-auto flex gap-2 w-full">
-                        <Input 
-                            value={studentId}
-                            onChange={(e) => setStudenetId(e.target.value)}
-                            placeholder="Student Id"
+
+                <h3 className="text-base font-medium text-gray-900 mb-3">Enrollment Requirements</h3>
+                <div className="flex  gap-10">
+                  {requirementList.map((item, index) => {
+                    if (student.requirements.includes(item)) return null;
+      
+                    return (
+                      <label
+                        key={index}
+                        className="flex items-center space-x-2 text-sm text-gray-700"
+                      >
+                        <input
+                          type="checkbox"
+                          value={item}
+                          checked={requirements.includes(item)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setRequirements((prev) => [...prev, item]);
+                            } else {
+                              setRequirements((prev) =>
+                                prev.filter((req) => req !== item)
+                              );
+                            }
+                          }}
                         />
-                        <Button
-                            disabled={isLoading}
-                            onClick={searchId}
-                        >
-                            Search
-                        </Button>
-                    </div>
+                        <span>{item}</span>
+                      </label>
+                    );
+                  })}
                 </div>
 
-                
-
-                {availableSection.length != 0 && (
-                    <div className="grid grid-cols-2 gap-5 mt-5">
+                <Button onClick={addRequirements} className="mt-10 w-full"> add requirements</Button>
+              </div>
 
 
-                        <div className="p-5  rounded-lg ms-5 " >
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-sm sm:text-base bg-stone-50 p-2 shadow-lg rounded-lg">
-                                    <div>
-                                    <p className="text-gray-500 font-medium text-xs">Student ID</p>
-                                    <p className="font-semibold text-gray-800 text-sm">{student.studentId}</p>
-                                    </div>
-                                    <div>
-                                    <p className="text-gray-500 font-medium text-xs">Name</p>
-                                    <p className="font-semibold text-gray-800 text-sm">{student.name}</p>
-                                    </div>
-                                    <div>
-                                    <p className="text-gray-500 font-medium text-xs">Course</p>
-                                    <p className="font-semibold text-gray-800 text-sm">{student.course}</p>
-                                    </div>
-                                    <div>
-                                    <p className="text-gray-500 font-medium text-xs">Level</p>
-                                    <p className="font-semibold text-gray-800 text-sm">{student.level}</p>
-                                    </div>
-                                    <div>
-                                    <p className="text-gray-500 font-medium text-xs">Semester</p>
-                                    <p className="font-semibold text-gray-800 text-sm">{student.sem}</p>
-                                    </div>
-                                 
-                                </div>
-                        </div>
-
-                     
-
-                    </div>
-                    
-                )}
-               
-                
             </div>
-
+          )}
         </div>
-    )
+      );
+      
 }
