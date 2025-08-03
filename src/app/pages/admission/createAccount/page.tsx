@@ -14,6 +14,9 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { X, Plus, GraduationCap } from "lucide-react"
 import { errorAlert, successAlert } from "@/app/utils/alert"
+import { getStudentInterface } from "@/app/types/student.type"
+import { CompleteReqForm } from "./components/completeReq"
+import { NotCompleteReqForm } from "./components/notCompeteReq"
 
 interface dataType {
     name : string,
@@ -22,8 +25,19 @@ interface dataType {
     sem : string,
     course : string,
     gender : string,
-    passed : string[]
+    passed : string[],
+    requirements: string[],
 }
+
+
+const requirementList = [
+  "Form 138",
+  "Good Moral",
+  "2x2 Picture",
+  "PSA",
+  "SHS Diploma",
+];
+
 
 export default function Page() {
   const [name, setName] = useState("")
@@ -36,6 +50,14 @@ export default function Page() {
   const [creditedSub, setCreditedSub] = useState<string[]>([])
   const [courses, setCourses] = useState<getCoursesInterface[]>([])
 
+  const [requirements, setRequirements] = useState<string[]>([])
+
+ 
+
+  const [student, setStudent] = useState<getStudentInterface | null>(null)
+ 
+
+
   const { data } = useQuery({
     queryKey: ["courses"],
     queryFn: () => axios.get(backendUrl("/course")),
@@ -47,7 +69,11 @@ export default function Page() {
 
   const mutation = useMutation({
     mutationFn : (data : dataType) => axios.post(backendUrl("/student"), data),
-    onSuccess : () => {
+    onSuccess : (response) => {
+
+        const student : getStudentInterface = response.data
+        setStudent(student)
+       
         successAlert("Student Account Created")
         setName("")
         setLevel("")
@@ -56,6 +82,7 @@ export default function Page() {
         setGender("")
         setCreditedSub([])
         setPassword("")
+        setRequirements([]) 
     },
     onError : () => {
         errorAlert("error occour")
@@ -75,18 +102,27 @@ export default function Page() {
         sem : sem,
         course : course,
         gender : gender,
-        passed : creditedSub
+        passed : creditedSub,
+        requirements : requirements,
     }
     mutation.mutate(studentObj)
   }
 
   return (
     <div className="min-h-screen bg-gray-50/50">
+
+      {(student) &&
+        (
+          (requirementList.length == requirements.length) ? <CompleteReqForm student={student}  setStudent={setStudent} /> : <NotCompleteReqForm student={student}  setStudent={setStudent} /> 
+        )
+      }
+
+
       {/* Header */}
       <div className="w-full h-32 bg-white shadow-sm border-b flex items-center justify-center">
             <div className="text-center">
                 <h1 className="text-3xl font-bold text-gray-800 mb-2"> Add Student Account </h1>
-                <p className="text-gray-600">lre asdas da sd asd</p>
+                <p className="text-gray-600">lre asdas da sd asd ble</p>
             </div>
       </div>
 
@@ -201,6 +237,34 @@ export default function Page() {
                 </div>
               </div>
             </div>
+
+            <Separator className="bg-gray-100" />
+
+
+            {/* Enrollment Requirements */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-gray-900">Enrollment Requirements</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {requirementList.map((item, index) => (
+                  <label key={index} className="flex items-center space-x-2 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      value={item}
+                      checked={requirements.includes(item)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setRequirements((prev) => [...prev, item]);
+                        } else {
+                          setRequirements((prev) => prev.filter((req) => req !== item));
+                        }
+                      }}
+                    />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
 
             <Separator className="bg-gray-100" />
 

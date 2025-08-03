@@ -46,6 +46,7 @@ export default function Page(){
             if(!response.data) return errorAlert("student id does not exist")
             const studentData : getStudentInterface = response.data
             if(studentData.section != "none") return errorAlert("student is already has Section")
+            if(response.data.status == "unComplete") return errorAlert("student has pending requirements")
             if(studentData.status == "graduate") return errorAlert("student is graduate")
             if(studentData.subjects.length != 0) return errorAlert("student is irregular")
             if(studentData.balance != 0) return errorAlert("student has balance")

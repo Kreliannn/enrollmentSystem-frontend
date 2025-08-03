@@ -69,6 +69,7 @@ export default function Page(){
             if(!response.data) return errorAlert("student id does not exist")
             if(response.data.status == "graduate") return errorAlert("student is graduate")
             if(response.data.status == "enrolled") return errorAlert("student is already Enrolled")
+            if(response.data.status == "unComplete") return errorAlert("student has pending requirements")
             if(response.data.balance != 0) return errorAlert("student has balance")
             const studentData : getStudentInterface = response.data
            

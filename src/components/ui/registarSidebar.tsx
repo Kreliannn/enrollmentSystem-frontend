@@ -27,16 +27,6 @@ import {
 
 const navigationItems = [
   {
-    title: "Dashboard",
-    url: "/pages/registar/home",
-    icon: Home, // Home dashboard
-  },
-  {
-    title: "Create Student Account",
-    url: "/pages/registar/createAccount",
-    icon: UserPlus2, // Add user
-  },
-  {
     title: "Enroll Regular Student",
     url: "/pages/registar/enrollRegular",
     icon: GraduationCap, // Academic-related

@@ -14,7 +14,8 @@ export interface studentInterface {
     section : string,
     subjects : string[],
     passed : string[],
-    failed : string[]
+    failed : string[],
+    requirements: string[],
 }
 
 export interface getStudentInterface {
@@ -31,7 +32,8 @@ export interface getStudentInterface {
     section : string,
     subjects : getSectionSubjectsInterface[],
     passed : string[],
-    failed : string[]
+    failed : string[],
+    requirements: string[],
 }
 
 
