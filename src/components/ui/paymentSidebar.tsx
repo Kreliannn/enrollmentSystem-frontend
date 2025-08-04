@@ -31,11 +31,7 @@ import {
   } from "lucide-react";
   
   const navigationItems = [
-    {
-      title: "Dashboard",
-      url: "/pages/payment/home",
-      icon: LayoutDashboard, // better for "Dashboard"
-    },
+
     {
       title: "Queue",
       url: "/pages/payment/queue",

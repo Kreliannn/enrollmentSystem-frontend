@@ -1,5 +1,5 @@
 "use client"
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -19,6 +19,8 @@ export default function Page(){
 
     const [payment, setPayment] = useState(0)
 
+    const [mode, setMode] = useState("cash")
+
     const [studentId, setStudenetId] = useState("")
     const [isLoading, setIsLoading] = useState(false)
 
@@ -28,8 +30,7 @@ export default function Page(){
             setIsLoading(false)
             if(!response.data) return errorAlert("student id does not exist")
             const studentData : getStudentInterface = response.data
-            if(studentData.status != "enrolled") return errorAlert("student is not enrolled")
-            if(studentData.balance == 0) return errorAlert("student already fully paid")
+            if(studentData.balance <= 0) return errorAlert("student has no balance")
             setStudent(response.data)
             successAlert("student found")
         },
@@ -37,7 +38,7 @@ export default function Page(){
     })
 
     const payMutation = useMutation({
-        mutationFn : (data : { id : string, payment : number}) => axios.post(backendUrl("/student/pay"), data),
+        mutationFn : (data : { id : string, payment : number, mode : string}) => axios.post(backendUrl("/student/pay"), data),
         onSuccess : (response) => {
           Swal.fire( `${student?.studentId} Balance is  ${response.data.balance.toLocaleString()}`, 'Payment Success', 'success')
           setStudenetId("")
@@ -56,7 +57,7 @@ export default function Page(){
     const payHandler = () => {
         confirmAlert(`student Pay ₱${payment}`, "Proceed", () => {
             if(!student) return
-            payMutation.mutate({ id : student?._id, payment : payment})
+            payMutation.mutate({ id : student?._id, payment : payment, mode : mode})
         })
     }
 
@@ -80,6 +81,8 @@ export default function Page(){
                             onChange={(e) => setStudenetId(e.target.value)}
                             placeholder="Student Id"
                         />
+
+                        
                         <Button
                             disabled={isLoading}
                             onClick={searchId}
@@ -131,6 +134,18 @@ export default function Page(){
                                     placeholder="Enter amount"
                                     className="flex-1 h-10 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                 />
+
+                                <Select value={mode} onValueChange={setMode}>
+                                    <SelectTrigger className="mt-0 border-gray-200">
+                                        <SelectValue placeholder="Mode of payment" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="cash">Cash</SelectItem>
+                                        <SelectItem value="gcash">GCash</SelectItem>
+                                        <SelectItem value="card">Card</SelectItem>
+                                    </SelectContent>
+                                </Select>
+
                                 <Button 
                                     className="h-10 px-5 rounded-lg"
                                     disabled={(payment > student.balance) || (payment <=  0)}

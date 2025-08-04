@@ -62,7 +62,6 @@ export default function Page() {
                 <Card key={trans._id} className="border-l-4 border-l-green-500 mb-4">
                     <CardContent className="p-4 flex flex-wrap md:flex-nowrap items-center justify-between gap-4">
                     
-
                     <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-blue-500" />
                         <div>
@@ -81,6 +80,11 @@ export default function Page() {
                     <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-orange-500" />
                         <p className="text-sm text-gray-900">{formatDate(trans.date)}</p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <Wallet className="h-4 w-4 text-green-600" />
+                        <p className="text-sm text-gray-900 capitalize">{trans.mode}</p>
                     </div>
 
                     <Badge variant="secondary" className="bg-green-100 text-green-800 whitespace-nowrap">
