@@ -33,6 +33,9 @@ export default function Page(){
             if(studentData.balance <= 0) return errorAlert("student has no balance")
             setStudent(response.data)
             successAlert("student found")
+            confirmAlert("Set payment as fully paid?", "fully paid", () => {
+                setPayment(studentData.balance)
+            })
         },
         onError : () => errorAlert("error occour")
     })
