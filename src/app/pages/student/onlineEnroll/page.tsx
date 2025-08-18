@@ -57,9 +57,9 @@ export default function Page(){
         })
     }
 
-    if(student?.subjects.length != 0) return <Enrolled text="you're already Enrolled" />
+    if(student?.subjects.length != 0) return <Enrolled text="you're already Enrolled or Ready for Printing" />
     if(student?.status == "graduate") return <Enrolled text="you're already Graduate" />
-    if(student?.status == "unComplete") return <Enrolled text="unComplete Requirements" />
+    if(student?.status == "unComplete") return <Enrolled text="inComplete Requirements" />
     if(student?.balance != 0) return <BalanceDisplay />
 
     return(

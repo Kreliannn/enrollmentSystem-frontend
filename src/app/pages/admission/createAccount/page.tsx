@@ -52,6 +52,8 @@ export default function Page() {
 
   const [requirements, setRequirements] = useState<string[]>([])
 
+
+  const [subCode, setSubCode] = useState<string[]>([])
  
 
   const [student, setStudent] = useState<getStudentInterface | null>(null)
@@ -66,6 +68,26 @@ export default function Page() {
   useEffect(() => {
     data?.data && setCourses(data.data)
   }, [data])
+
+
+  useEffect(() => {
+    if(course){
+     
+        courses.forEach((item) => {
+            if(item.code == course){
+                item.year.forEach((year) => {
+                  year.subjects.forEach((sub) => {
+                    setSubCode(prev => [...prev, sub.code])
+                  })
+               })
+            }
+        })
+    }
+  }, [course])
+
+
+ console.log(subCode)
+
 
   const mutation = useMutation({
     mutationFn : (data : dataType) => axios.post(backendUrl("/student"), data),
@@ -274,19 +296,27 @@ export default function Page() {
               <h3 className="text-sm font-medium text-gray-900">Credited Subjects</h3>
               <div className="flex gap-2">
                 <div className="flex-1">
-                  <Input
-                    value={sub}
-                    onChange={(e) => setSub(e.target.value)}
-                    placeholder="Enter subject code (e.g., CS101)"
-                    className="border-gray-200 "
-                    onKeyPress={(e) => e.key === "Enter" && sub.trim() && addCreditedSub()}
-                  />
+                  <div>
+                   
+                    <Select value={sub} onValueChange={setSub}>
+                      <SelectTrigger className="mt-1.5 border-gray-200  w-full">
+                        <SelectValue placeholder="Select sub code" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {subCode.map((sub, index) => (
+                          <SelectItem key={index} value={sub}>
+                            {sub}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                </div>
                 </div>
                 <Button
                   onClick={addCreditedSub}
                   disabled={!sub.trim()}
                   size="default"
-                  className=" text-white px-4"
+                  className=" text-white px-4  mt-2" 
                 >
                   <Plus className="h-4 w-4 mr-1" />
                   Add
